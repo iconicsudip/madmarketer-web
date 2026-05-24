@@ -1,0 +1,146 @@
+.marqueeSection {
+  padding: 4rem 0;
+  background-color: var(--dark-bg);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.label {
+  font-family: var(--font-inter);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  margin-bottom: 3rem;
+  text-align: center;
+}
+
+.marqueeContainer {
+  position: relative;
+  width: 100vw;
+  max-width: 100%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+.fadeLeft, .fadeRight {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 150px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.fadeLeft {
+  left: 0;
+  background: linear-gradient(to right, var(--dark-bg), transparent);
+}
+
+.fadeRight {
+  right: 0;
+  background: linear-gradient(to left, var(--dark-bg), transparent);
+}
+
+.marqueeTrack {
+  display: flex;
+  gap: 2rem;
+  padding: 0 1rem;
+  width: max-content;
+  animation: scroll 30s linear infinite;
+}
+
+.marqueeTrack:hover {
+  animation-play-state: paused;
+}
+
+@keyframes scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(calc(-50% - 1rem)); } /* -50% shifts halfway (1 set of items) */
+}
+
+.logoCard {
+  background: transparent;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  min-width: 120px;
+  height: auto;
+  transition: all 0.3s ease;
+}
+
+.iconWrapper {
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+/* Creating a soft glow that uses the brand color (currentColor from the inline style) */
+.iconWrapper::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  border-radius: 16px;
+  box-shadow: 0 0 20px currentColor;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.logoCard:hover .iconWrapper {
+  background: rgba(255, 255, 255, 0.05);
+  transform: translateY(-5px);
+  border-color: currentColor;
+}
+
+.logoCard:hover .iconWrapper::after {
+  opacity: 0.3;
+}
+
+.logoSvg {
+  width: 32px;
+  height: 32px;
+  color: inherit;
+  filter: drop-shadow(0 2px 5px rgba(0,0,0,0.5));
+}
+
+.fallbackText {
+  font-family: var(--font-inter);
+  font-weight: 500;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.5);
+  transition: color 0.3s ease;
+  text-align: center;
+}
+
+.logoCard:hover .fallbackText {
+  color: #ffffff;
+}
+
+@media (max-width: 768px) {
+  .logoCard {
+    min-width: 90px;
+  }
+  .iconWrapper {
+    width: 50px;
+    height: 50px;
+  }
+  .logoSvg {
+    width: 24px;
+    height: 24px;
+  }
+}

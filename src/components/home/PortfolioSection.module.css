@@ -1,0 +1,212 @@
+.portfolioSection {
+  padding: 150px 0;
+  position: relative;
+  z-index: 2;
+}
+
+/* TOP HEADER */
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1.5rem;
+  margin-bottom: 8rem;
+}
+
+.heading {
+  font-family: var(--font-archivo);
+  font-size: 3.5rem;
+  line-height: 1.1;
+  color: #fff;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+
+.redText {
+  color: var(--primary-red);
+}
+
+.description {
+  font-family: var(--font-inter);
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 1.2rem;
+  line-height: 1.7;
+  max-width: 800px;
+}
+
+.ctaBtn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--primary-red);
+  color: #fff;
+  border: none;
+  padding: 1rem 2.5rem;
+  border-radius: 50px;
+  font-family: var(--font-inter);
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s, background 0.2s;
+  margin-top: 1rem;
+}
+
+.ctaBtn:hover {
+  transform: translateY(-2px);
+  background: #a00b12;
+}
+
+/* CENTERED CARDS CONTAINER */
+.cardsContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15vh; /* Large gap between cards as you scroll down */
+  padding-bottom: 25vh; /* Buffer at bottom for scrolling past the last card */
+}
+
+.card {
+  position: sticky;
+  /* Math: Stick around the center of the screen, staggering down by 30px per card */
+  top: calc(15vh + (var(--index) * 30px)); 
+  width: 100%;
+  max-width: 1200px; /* Increased from 1000px to make cards wider */
+  background: rgba(20, 20, 20, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 32px;
+  padding: 3rem;
+  box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+  transition: transform 0.3s ease;
+}
+
+.cardHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.clientName {
+  font-family: var(--font-archivo);
+  font-size: 2rem;
+  color: #fff;
+}
+
+.cardTitle {
+  font-family: var(--font-inter);
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 1.15rem;
+  line-height: 1.6;
+  max-width: 90%;
+}
+
+.cardBody {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-end;
+}
+
+.statsWrap {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.statBox h4 {
+  font-family: var(--font-archivo);
+  font-size: 3rem;
+  color: #fff;
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+
+.statBox span {
+  font-family: var(--font-inter);
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 1rem;
+}
+
+.caseStudyBtn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #fff;
+  color: #000;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 50px;
+  font-family: var(--font-inter);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  align-self: flex-start;
+  margin-top: 1rem;
+  transition: transform 0.2s;
+}
+
+.caseStudyBtn:hover {
+  transform: translateX(4px);
+}
+
+.imageWrap {
+  flex: 1;
+  height: 250px;
+  border-radius: 16px;
+  overflow: hidden;
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.mockupImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .twoColLayout {
+    flex-direction: column;
+    gap: 4rem;
+  }
+  
+  .leftCol {
+    flex: 1;
+  }
+  
+  .stickyContent {
+    position: relative;
+    top: 0;
+  }
+  
+  .rightCol {
+    flex: 1;
+    width: 100%;
+    padding-bottom: 50px;
+  }
+}
+
+@media (max-width: 768px) {
+  .cardBody {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .imageWrap {
+    width: 100%;
+    height: 200px;
+  }
+  
+  .heading {
+    font-size: 2.2rem;
+  }
+  
+  .statBox h4 {
+    font-size: 2.5rem;
+  }
+}

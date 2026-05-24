@@ -1,0 +1,138 @@
+.productsSection {
+  padding: 100px 0 150px 0;
+  background-color: var(--background);
+  position: relative;
+  z-index: 2;
+  overflow: hidden;
+}
+
+.cardsContainer {
+  display: flex;
+  gap: 3rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.productCardWrapper {
+  flex: 1;
+  max-width: 550px;
+  /* Perspective is set inline on the parent container */
+}
+
+.productCard {
+  background: rgba(10, 10, 10, 0.95);
+  border-radius: 24px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow 0.3s ease;
+  will-change: transform;
+}
+
+.cardImageContainer {
+  height: 280px;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.pill {
+  position: absolute;
+  top: 1.5rem;
+  left: 1.5rem;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  padding: 0.5rem 1.25rem;
+  border-radius: 50px;
+  font-family: var(--font-inter);
+  font-size: 0.85rem;
+  font-weight: 500;
+  z-index: 10;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.productImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.productCard:hover .productImg {
+  transform: scale(1.05);
+}
+
+.cardContent {
+  padding: 3rem 2.5rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.productTitle {
+  font-family: var(--font-archivo);
+  font-size: 2.2rem;
+  color: #fff;
+  margin-bottom: 1rem;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.productDesc {
+  font-family: var(--font-inter);
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 1rem;
+  line-height: 1.7;
+  margin-bottom: 3rem;
+}
+
+.cardActions {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-top: auto;
+}
+
+.learnMoreBtn {
+  color: var(--primary-red);
+  font-family: var(--font-inter);
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+.learnMoreBtn:hover {
+  opacity: 0.8;
+}
+
+.demoBtn {
+  background: transparent;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 0.75rem 2rem;
+  border-radius: 50px;
+  font-family: var(--font-inter);
+  font-size: 0.95rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.demoBtn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+/* RESPONSIVE */
+@media (max-width: 1024px) {
+  .cardsContainer {
+    flex-direction: column;
+  }
+  .productCardWrapper {
+    width: 100%;
+    max-width: 600px;
+  }
+}

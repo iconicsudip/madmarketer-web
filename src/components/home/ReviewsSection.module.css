@@ -1,0 +1,171 @@
+.reviewsSection {
+  padding: 10rem 0;
+  background-color: var(--dark-bg);
+  color: var(--warm-white);
+  position: relative;
+  overflow: hidden;
+}
+
+.bgBlob {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 1200px;
+  height: 1200px;
+  background: radial-gradient(circle, rgba(237, 28, 36, 0.08) 0%, transparent 50%);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 5rem;
+  gap: 4rem;
+}
+
+.heading {
+  flex: 1;
+  font-family: var(--font-inter);
+  font-size: clamp(2.5rem, 4vw, 4rem);
+  font-weight: 600;
+  letter-spacing: -0.04em;
+  line-height: 1.1;
+  color: #fff;
+}
+
+.subheading {
+  flex: 1;
+  font-family: var(--font-inter);
+  font-size: 1.15rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.6);
+  max-width: 500px;
+}
+
+.reviewsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+/* Card adapted to dark theme based on the layout provided */
+.reviewCard {
+  background: rgba(255, 255, 255, 0.03); /* Subtle light tint for depth */
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+  padding: 3rem 2.5rem;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: float 8s ease-in-out infinite;
+  backdrop-filter: blur(10px);
+}
+
+.card0 { animation-delay: 0s; }
+.card1 { animation-delay: -2.6s; }
+.card2 { animation-delay: -5.3s; }
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-12px); }
+  100% { transform: translateY(0px); }
+}
+
+.reviewCard:hover {
+  background: rgba(255, 255, 255, 0.05);
+  transform: translateY(-5px) scale(1.02) !important;
+  border-color: rgba(237, 28, 36, 0.3); /* Mad Marketer red glow on hover */
+  animation-play-state: paused;
+}
+
+.companyWrap {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  color: #fff;
+}
+
+.companyName {
+  font-family: var(--font-inter);
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.content {
+  font-family: var(--font-inter);
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.85);
+  margin-bottom: 2rem;
+  flex-grow: 1;
+}
+
+.stars {
+  display: flex;
+  gap: 0.25rem;
+  color: #6366f1; /* Purple/Indigo color from the screenshot */
+  margin-bottom: 2rem;
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 2rem;
+}
+
+.author {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.authorInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.authorName {
+  font-family: var(--font-inter);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.authorRole {
+  font-family: var(--font-inter);
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.5);
+  margin-top: 0.2rem;
+}
+
+@media (max-width: 1024px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+  }
+  .subheading {
+    max-width: 100%;
+  }
+  .reviewsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .reviewsGrid {
+    grid-template-columns: 1fr;
+  }
+}

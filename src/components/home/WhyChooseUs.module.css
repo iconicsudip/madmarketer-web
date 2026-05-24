@@ -1,0 +1,174 @@
+.whySection {
+  padding: 120px 0 160px 0;
+  position: relative;
+  z-index: 2;
+  background-color: var(--background);
+  overflow: hidden; /* Contains the rotated cards to prevent horizontal scroll */
+}
+
+.header {
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto 8rem auto;
+}
+
+.heading {
+  font-family: var(--font-inter);
+  font-size: 3.5rem;
+  font-weight: 600;
+  color: #fff;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+  letter-spacing: -0.01em;
+}
+
+.italicRed {
+  color: #ff0000;
+  font-style: italic;
+  font-family: serif; /* Gives that elegant italic look from the screenshot */
+  font-weight: 400;
+}
+
+.description {
+  font-family: var(--font-inter);
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1.2rem;
+}
+
+/* ZIG-ZAG TIMELINE */
+.timeline {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 40px 0;
+}
+
+.svgLineWrapper {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 200px; /* Width of the curving path */
+  z-index: 0;
+  pointer-events: none;
+}
+
+.dashedCurve {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* CARD POSITIONING */
+.cardWrapper {
+  width: 42%;
+  position: relative;
+  z-index: 2;
+  /* GSAP handles the rotation initially, but we set a fallback here */
+}
+
+/* Tightly interlock them */
+.cardWrapper:not(:first-child) {
+  margin-top: -80px; 
+}
+
+.leftCard {
+  align-self: flex-start;
+  transform: rotate(-4deg);
+}
+
+.rightCard {
+  align-self: flex-end;
+  transform: rotate(4deg);
+}
+
+/* THE CARD ITSELF */
+.card {
+  background: rgba(20, 20, 20, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 24px;
+  padding: 3rem 2.5rem;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(20px);
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
+}
+
+.cardGlow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.orb {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2rem;
+  position: relative;
+  z-index: 2;
+  /* 3D effect */
+  border-top: 2px solid rgba(255, 255, 255, 0.5);
+  border-bottom: 2px solid rgba(0, 0, 0, 0.3);
+}
+
+.cardTitle {
+  font-family: var(--font-archivo);
+  font-size: 1.6rem;
+  color: #fff;
+  margin-bottom: 1rem;
+  position: relative;
+  z-index: 2;
+}
+
+.cardDesc {
+  font-family: var(--font-inter);
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 1rem;
+  line-height: 1.6;
+  position: relative;
+  z-index: 2;
+}
+
+/* RESPONSIVE */
+@media (max-width: 1024px) {
+  .cardWrapper {
+    width: 48%;
+  }
+}
+
+@media (max-width: 768px) {
+  .svgLineWrapper {
+    display: none; /* Hide curve on mobile */
+  }
+  .cardWrapper {
+    width: 100%;
+    align-self: center !important;
+    margin-top: 2rem !important;
+    transform: rotate(0) !important; /* Flat on mobile */
+  }
+  .leftCard, .rightCard {
+    transform: rotate(0);
+  }
+  .heading {
+    font-size: 2.5rem;
+  }
+}

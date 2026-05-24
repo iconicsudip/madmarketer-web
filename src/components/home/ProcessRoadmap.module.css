@@ -1,0 +1,168 @@
+.roadmapSection {
+  padding: 120px 0 160px 0;
+  position: relative;
+  z-index: 2;
+  background-color: var(--background);
+}
+
+.header {
+  text-align: center;
+  max-width: 1000px;
+  margin: 0 auto 6rem auto;
+}
+
+.heading {
+  font-family: var(--font-archivo);
+  font-size: 2.8rem;
+  color: #fff;
+  line-height: 1.2;
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.02em;
+}
+
+.redText {
+  color: var(--primary-red);
+}
+
+.description {
+  font-family: var(--font-inter);
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1.05rem;
+  line-height: 1.8;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* ROADMAP GRID */
+.roadmapGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 300px);
+  gap: 2rem;
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* SVG Connecting Line */
+.svgContainer {
+  position: absolute;
+  top: 50px; /* Offset to align with center of top row cards */
+  left: 0;
+  width: 100%;
+  height: calc(100% - 100px); /* Height spans the rows */
+  z-index: 0;
+  pointer-events: none;
+}
+
+.connectingLine {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  filter: drop-shadow(0 0 8px rgba(237, 28, 36, 0.6));
+}
+
+/* CARD POSITIONING & STAGGERING */
+.cardWrapper {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+}
+
+/* Row 1 */
+.cardPos1 {
+  align-items: flex-start;
+}
+.cardPos2 {
+  align-items: flex-end; /* Pushed down to bottom of row */
+}
+.cardPos3 {
+  align-items: flex-start;
+}
+
+/* Row 2 */
+.cardPos4 {
+  align-items: flex-start;
+}
+.cardPos5 {
+  align-items: flex-end;
+}
+.cardPos6 {
+  align-items: flex-start;
+}
+
+
+/* CARD STYLES */
+.card {
+  background: rgba(15, 15, 15, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 2.5rem;
+  width: 100%;
+  max-width: 350px;
+  height: 300px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  opacity: 0; /* Hidden initially for GSAP */
+}
+
+.numberBadge {
+  background: #fff;
+  color: var(--primary-red);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-archivo);
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.cardTitle {
+  font-family: var(--font-archivo);
+  font-size: 1.6rem;
+  color: #fff;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+
+.cardDesc {
+  font-family: var(--font-inter);
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+/* RESPONSIVE */
+@media (max-width: 1024px) {
+  .roadmapGrid {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: auto;
+    gap: 3rem;
+  }
+  .svgContainer {
+    display: none; /* SVG path gets too complex to auto-resize flawlessly in a 2-col wrap, better to hide or use CSS lines */
+  }
+  .cardWrapper {
+    align-items: center !important;
+  }
+  .card {
+    height: auto;
+    min-height: 280px;
+  }
+}
+
+@media (max-width: 768px) {
+  .roadmapGrid {
+    grid-template-columns: 1fr;
+  }
+  .heading {
+    font-size: 2.2rem;
+  }
+}

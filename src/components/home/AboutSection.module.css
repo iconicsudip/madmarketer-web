@@ -1,0 +1,123 @@
+.aboutSection {
+  position: relative;
+  padding: 8rem 0 10rem;
+  background-color: var(--dark-bg);
+  color: var(--warm-white);
+  overflow: hidden;
+  text-align: center;
+}
+
+.massiveBlob {
+  position: absolute;
+  top: -10%;
+  right: -20%;
+  width: 900px;
+  height: 900px;
+  background-color: rgba(237, 28, 36, 0.4); /* Mad Marketer Red */
+  border-radius: 50%;
+  filter: blur(80px);
+  z-index: 0;
+  pointer-events: none;
+  animation: morphBlob 15s ease-in-out infinite alternate, floatBlob 20s linear infinite;
+}
+
+@keyframes morphBlob {
+  0% { border-radius: 40% 60% 70% 30% / 40% 40% 60% 50%; }
+  34% { border-radius: 70% 30% 50% 50% / 30% 30% 70% 70%; }
+  67% { border-radius: 100% 60% 60% 100% / 100% 100% 60% 60%; }
+  100% { border-radius: 40% 60% 70% 30% / 40% 40% 60% 50%; }
+}
+
+@keyframes floatBlob {
+  0% { transform: rotate(0deg) translate(0, 0) scale(1); }
+  33% { transform: rotate(120deg) translate(50px, 100px) scale(1.1); }
+  66% { transform: rotate(240deg) translate(-50px, -50px) scale(0.9); }
+  100% { transform: rotate(360deg) translate(0, 0) scale(1); }
+}
+
+.topContent {
+  position: relative;
+  z-index: 10;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.label {
+  display: inline-block;
+  font-family: var(--font-inter);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--secondary-text);
+  margin-bottom: 2rem;
+}
+
+.mainHeading {
+  font-family: var(--font-inter);
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+  margin-bottom: 8rem;
+  text-transform: none; /* override Archivo global uppercase */
+}
+
+/* 
+  To mimic the visual effect where text overlapping the blob changes color,
+  we can use a mix-blend-mode or just color part of the text explicitly. 
+  Because doing an exact color inversion on a blurred blob is complex in CSS 
+  (mix-blend-mode: difference can work, but is unpredictable with colors),
+  we will explicitly color the end of the sentence to mimic the aesthetic.
+*/
+.highlightText {
+  color: var(--primary-red);
+}
+
+.bottomContent {
+  position: relative;
+  z-index: 10;
+  max-width: 650px;
+  margin: 0 auto;
+}
+
+.subHeading {
+  font-family: var(--font-inter);
+  font-size: clamp(2rem, 3vw, 2.5rem);
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+  color: #ffffff;
+  text-transform: none;
+}
+
+.paragraph {
+  font-family: var(--font-inter);
+  font-size: 1.15rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+@media (max-width: 1024px) {
+  .massiveBlob {
+    width: 600px;
+    height: 600px;
+    right: -30%;
+    top: 10%;
+  }
+  .mainHeading {
+    margin-bottom: 5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .aboutSection {
+    padding: 5rem 0 6rem;
+  }
+  .massiveBlob {
+    width: 400px;
+    height: 400px;
+    right: -20%;
+    top: 20%;
+  }
+}
