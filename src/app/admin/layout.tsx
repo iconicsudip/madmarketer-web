@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import Link from 'next/link';
 import { LayoutDashboard, FileText, Settings, Home, Briefcase, Package, BookOpen, Layout, Star, Map, LogOut } from 'lucide-react';
 import styles from './admin.module.css';
