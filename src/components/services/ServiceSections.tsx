@@ -40,8 +40,8 @@ export function ServiceHero({ data }: { data: Record<string, string> }) {
         {icons.map((icon, i) => {
           const angle = (i / icons.length) * Math.PI * 2;
           const radius = 300 + (i % 2 === 0 ? 100 : 250); // Stagger distances
-          const x = Math.cos(angle) * radius;
-          const y = Math.sin(angle) * radius;
+          const x = (Math.cos(angle) * radius).toFixed(2);
+          const y = (Math.sin(angle) * radius).toFixed(2);
           
           return (
             <motion.div

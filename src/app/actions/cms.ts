@@ -50,18 +50,15 @@ export async function getSiteSettings() {
       console.warn('prisma.siteSettings is undefined. Returning default mock settings.');
       return { id: 'default', siteName: 'Madmarketer', defaultMetaTitle: 'Madmarketer', defaultMetaDesc: 'Modern infrastructure', ogImage: null, googleAnalyticsId: null, customScripts: null, footerMenus: null, customSitemapUrls: null, overrideSitemap: false, customRobotsTxt: null, footerNewsletterTitle: null, footerNewsletterDesc: null, footerBrandDesc: null, footerCopyright: null, socialFacebook: null, socialInstagram: null, socialTwitter: null, socialLinkedIn: null, socialYoutube: null, privacyPolicy: null, termsConditions: null, refundPolicy: null };
     }
-    return await prisma.siteSettings.upsert({
-      where: { id: 'default' },
-      update: {}, // do nothing if it already exists
-      create: { 
-        id: 'default', 
-        siteName: 'Madmarketer', 
-        defaultMetaTitle: 'Madmarketer', 
-        defaultMetaDesc: 'Modern infrastructure' 
-      }
+    const settings = await prisma.siteSettings.findUnique({
+      where: { id: 'default' }
     });
-  } catch (error) {
-    console.error('Failed to get site settings:', error);
+    if (!settings) {
+      return { id: 'default', siteName: 'Madmarketer', defaultMetaTitle: 'Madmarketer', defaultMetaDesc: 'Modern infrastructure', ogImage: null, googleAnalyticsId: null, customScripts: null, footerMenus: null, customSitemapUrls: null, overrideSitemap: false, customRobotsTxt: null, footerNewsletterTitle: null, footerNewsletterDesc: null, footerBrandDesc: null, footerCopyright: null, socialFacebook: null, socialInstagram: null, socialTwitter: null, socialLinkedIn: null, socialYoutube: null, privacyPolicy: null, termsConditions: null, refundPolicy: null };
+    }
+    return settings;
+  } catch (error: any) {
+    console.error(`Failed to get site settings: ${error.message || 'Database unreachable'}`);
     return null;
   }
 }

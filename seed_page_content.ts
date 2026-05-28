@@ -8,7 +8,7 @@ async function main() {
   let updated = 0;
 
   for (const page of pages) {
-    if (page.slug === '') continue; // Skip home
+    if (page.slug === '' || page.slug.startsWith('services/tools/')) continue; // Skip home and tools
 
     // Delete existing sections to avoid duplicates
     if (page.sections.length > 0) {
@@ -20,36 +20,39 @@ async function main() {
     // Default sections for service pages
     let sections = [
       {
-        type: 'hero',
+        type: 'service_hero',
         content: JSON.stringify({
-          headline: `${name} Solutions`,
-          subheadline: `Cutting-edge ${name} built for scale and enterprise growth. Leverage intelligent infrastructure today.`,
-          ctaText: 'Start Your Project',
-          ctaLink: '/contact'
+          pillText: `${name} Services`,
+          headline: `${name}`,
+          subtext: `Expert ${name.toLowerCase()} solutions tailored to accelerate your business growth and streamline operations.`,
+          buttonText: 'Get Started',
+          orbitIcons: JSON.stringify(['Code', 'Cpu', 'Globe', 'Layers', 'Zap'])
         }),
         orderIndex: 0
       },
       {
-        type: 'features',
+        type: 'service_grid',
         content: JSON.stringify({
-          heading: `Why Our ${name}?`,
-          feature1Title: 'Enterprise Scalability',
-          feature1Desc: `Our ${name} is designed to scale limitlessly as your traffic and data needs grow.`,
-          feature2Title: 'Advanced Automation',
-          feature2Desc: 'We build AI-driven workflows directly into our architecture to minimize manual overhead.',
-          feature3Title: 'Security First',
-          feature3Desc: 'Bank-grade security and compliance built-in from day one.'
+          pillText: 'Features',
+          heading: `Comprehensive ${name} Capabilities`,
+          services: JSON.stringify([
+            { title: 'Custom Solutions', desc: `Bespoke ${name.toLowerCase()} tailored exactly to your requirements.`, icon: 'Settings' },
+            { title: 'Scalable Architecture', desc: 'Built to grow seamlessly alongside your expanding business.', icon: 'TrendingUp' },
+            { title: 'Dedicated Support', desc: 'Round-the-clock maintenance and expert technical assistance.', icon: 'Shield' }
+          ])
         }),
         orderIndex: 1
       },
       {
-        type: 'image_text',
+        type: 'service_testimonials',
         content: JSON.stringify({
-          heading: `Transforming businesses with ${name}`,
-          body: `At Madmarketer, we don't just deliver software—we deliver comprehensive digital ecosystems. Our approach to ${name} ensures you stay ahead of the curve, utilizing the latest methodologies in AI and automation.\n\nWhether you are a startup looking for agility or an enterprise demanding robust reliability, our tailored strategies are the key to unlocking exponential growth.`,
-          imageUrl: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=1200&h=800',
-          imageAlt: `${name} visualization`,
-          imagePosition: 'right'
+          pillText: 'Success Stories',
+          heading: 'Trusted by Industry Leaders',
+          testimonials: JSON.stringify([
+            { name: 'Sarah Jenkins', role: 'CTO @ TechFlow', text: `Madmarketer completely transformed our approach to ${name.toLowerCase()}. The ROI has been incredible.`, avatar: '' },
+            { name: 'Michael Chen', role: 'Director @ InnovateCo', text: `Their ${name.toLowerCase()} expertise saved us months of development time and significantly boosted our metrics.`, avatar: '' },
+            { name: 'Elena Rodriguez', role: 'VP Operations @ ScaleUp', text: `The best ${name.toLowerCase()} partner we've ever worked with. Seamless integration and outstanding results.`, avatar: '' }
+          ])
         }),
         orderIndex: 2
       },
@@ -66,14 +69,20 @@ async function main() {
         orderIndex: 3
       },
       {
-        type: 'cta',
+        type: 'service_team_contact',
         content: JSON.stringify({
-          heading: `Ready to upgrade your ${name}?`,
-          subtext: 'Join industry leaders who trust Madmarketer with their digital infrastructure.',
-          primaryCtaText: 'Contact Our Experts',
-          primaryCtaLink: '/contact',
-          secondaryCtaText: 'View Portfolio',
-          secondaryCtaLink: '/portfolio'
+          teamPill: 'Our Team',
+          teamHeading: `Meet the experts behind our ${name} services.`,
+          teamSubtext: `We are a dedicated team providing enterprise-grade ${name.toLowerCase()} infrastructure.`,
+          stats: JSON.stringify([
+            { number: '150+', label: 'Projects Delivered' },
+            { number: '99%', label: 'Client Satisfaction' },
+            { number: '24/7', label: 'Technical Support' }
+          ]),
+          ctaHeading: 'Ready to transform your business?',
+          ctaSubtext: `Take the first step towards building your ultimate ${name.toLowerCase()} infrastructure today.`,
+          ctaButtonText: 'Contact Our Experts',
+          ctaLink: '/contact'
         }),
         orderIndex: 4
       }
