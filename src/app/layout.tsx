@@ -7,6 +7,7 @@ import { getSiteSettings } from "@/app/actions/cms";
 import Navbar from "@/components/home/Navbar";
 import Footer from "@/components/home/Footer";
 import Script from "next/script";
+import { Analytics } from "@vercel/analytics/next";
 
 const archivo = Archivo_Black({
   subsets: ["latin"],
@@ -71,6 +72,7 @@ export default async function RootLayout({
             </Script>
           </>
         )}
+        <Analytics />
       </body>
     </html>
   );
