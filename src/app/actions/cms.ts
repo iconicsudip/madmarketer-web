@@ -45,16 +45,25 @@ export async function updateProduct(id: string, data: { title: string; descripti
 
 // --- SETTINGS (SEO) ---
 export async function getSiteSettings() {
-  return await prisma.siteSettings.upsert({
-    where: { id: 'default' },
-    update: {}, // do nothing if it already exists
-    create: { 
-      id: 'default', 
-      siteName: 'Madmarketer', 
-      defaultMetaTitle: 'Madmarketer', 
-      defaultMetaDesc: 'Modern infrastructure' 
+  try {
+    if (!prisma.siteSettings) {
+      console.warn('prisma.siteSettings is undefined. Returning default mock settings.');
+      return { id: 'default', siteName: 'Madmarketer', defaultMetaTitle: 'Madmarketer', defaultMetaDesc: 'Modern infrastructure', ogImage: null, googleAnalyticsId: null, customScripts: null, footerMenus: null, customSitemapUrls: null, overrideSitemap: false, customRobotsTxt: null, footerNewsletterTitle: null, footerNewsletterDesc: null, footerBrandDesc: null, footerCopyright: null, socialFacebook: null, socialInstagram: null, socialTwitter: null, socialLinkedIn: null, socialYoutube: null, privacyPolicy: null, termsConditions: null, refundPolicy: null };
     }
-  });
+    return await prisma.siteSettings.upsert({
+      where: { id: 'default' },
+      update: {}, // do nothing if it already exists
+      create: { 
+        id: 'default', 
+        siteName: 'Madmarketer', 
+        defaultMetaTitle: 'Madmarketer', 
+        defaultMetaDesc: 'Modern infrastructure' 
+      }
+    });
+  } catch (error) {
+    console.error('Failed to get site settings:', error);
+    return null;
+  }
 }
 
 export async function updateSiteSettings(data: {
