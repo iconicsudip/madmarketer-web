@@ -46,7 +46,7 @@ export default async function EditPageAdmin({ params }: { params: Promise<{ id: 
   };
 
   return (
-    <div style={{ maxWidth: '1200px' }}>
+    <div>
 
       {/* Breadcrumb */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '2rem', fontSize: '0.85rem', color: '#555' }}>

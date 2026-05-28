@@ -50,6 +50,13 @@
   color: var(--foreground);
 }
 
+.navItemActive {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border-left: 3px solid var(--primary-red, #ED1C24);
+  font-weight: 600;
+}
+
 .mainContent {
   flex: 1;
   padding: 3rem;
@@ -119,4 +126,98 @@
 .textarea {
   min-height: 150px;
   resize: vertical;
+}
+
+/* Mobile Elements (Hidden on Desktop) */
+.mobileMenuToggle {
+  display: none;
+}
+.mobileTopBar {
+  display: none;
+}
+.hamburger {
+  display: none;
+}
+.mobileOverlay {
+  display: none;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .adminLayout {
+    flex-direction: column;
+  }
+  .mobileTopBar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    background-color: black;
+    border-bottom: 1px solid var(--card-border);
+    position: sticky;
+    top: 0;
+    z-index: 90;
+  }
+  .hamburger {
+    display: block;
+    cursor: pointer;
+    color: var(--foreground);
+  }
+  
+  /* Sidebar as a Drawer */
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 280px;
+    height: 100vh;
+    z-index: 100;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    border-right: 1px solid var(--card-border);
+  }
+  
+  /* Hide sidebar header on mobile since we have top bar */
+  .sidebarHeader {
+    display: none;
+  }
+  
+  /* Overlay */
+  .mobileOverlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    z-index: 95;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+
+  /* Toggle State */
+  .mobileMenuToggle:checked ~ .sidebar {
+    transform: translateX(0);
+  }
+  .mobileMenuToggle:checked ~ .mobileOverlay {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* Adjust Main Content */
+  .mainContent {
+    margin-left: 0;
+    padding: 1.5rem 1rem;
+  }
+  .pageHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  .table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
 }
