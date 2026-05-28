@@ -15,8 +15,8 @@ export function proxy(req: NextRequest) {
 
     // Verify token matches credentials
     const expectedUser = process.env.ADMIN_USERNAME || 'admin';
-    const expectedPassword = process.env.ADMIN_PASSWORD || 'admin@123';
-    const expectedToken = Buffer.from(`${expectedUser}:${expectedPassword}`).toString('base64');
+    const expectedPassword = process.env.ADMIN_PASSWORD || 'password';
+    const expectedToken = btoa(`${expectedUser}:${expectedPassword}`);
 
     if (adminToken.value !== expectedToken) {
       url.pathname = '/login';
