@@ -31,7 +31,7 @@ export async function generateMetadata(): Promise<Metadata> {
       images: settings?.ogImage ? [settings.ogImage] : [],
     },
     icons: {
-      icon: '/icon.png',
+      icon: '/logo.png',
     },
   };
 }
