@@ -86,6 +86,15 @@ const SECTION_TYPES: SectionType[] = [
     ],
   },
   {
+    key: 'iframe', label: 'Iframe Embed', icon: '🔗',
+    description: 'Embed an external webpage or form via iframe',
+    fields: [
+      { key: 'heading', label: 'Heading (Optional)', type: 'text', placeholder: 'Send us a message' },
+      { key: 'url', label: 'Embed URL', type: 'url', placeholder: 'https://...' },
+      { key: 'height', label: 'Height (in px)', type: 'text', placeholder: '1024' },
+    ],
+  },
+  {
     key: 'widget', label: 'App Widget', icon: '🧩',
     description: 'Embed an interactive app component or iframe URL',
     fields: [
