@@ -1,29 +1,43 @@
-import Navbar from '@/components/home/Navbar';
-import Hero from '@/components/home/Hero';
-import ServicesEcosystem from '@/components/home/ServicesEcosystem';
-import AboutSection from '@/components/home/AboutSection';
-import ProductsSection from '@/components/home/ProductsSection';
-import InfrastructureMarquee from '@/components/home/InfrastructureMarquee';
-import ProcessRoadmap from '@/components/home/ProcessRoadmap';
-import WhyChooseUs from '@/components/home/WhyChooseUs';
-import ReviewsSection from '@/components/home/ReviewsSection';
-import BlogSection from '@/components/home/BlogSection';
-import PortfolioSection from '@/components/home/PortfolioSection';
+import PageRenderer from '@/components/PageRenderer';
+import {
+  getServices, getProducts, getBlogPosts,
+  getTestimonials, getPortfolioProjects
+} from '@/app/actions/cms';
+import { prisma } from '@/lib/prisma';
+import { Metadata } from 'next';
 
-export default function Home() {
+export async function generateMetadata(): Promise<Metadata> {
+  const page = await prisma.page.findUnique({ where: { slug: '' } });
+  if (!page) return { title: 'Mad Marketer' };
+  
+  return { 
+    title: page.title, 
+    description: page.metaDescription,
+    keywords: page.keywords || undefined,
+    openGraph: page.ogImage ? { images: [page.ogImage] } : undefined,
+  };
+}
+
+export default async function Home() {
+  const [services, products, blogs, reviews, portfolio] = await Promise.all([
+    getServices(),
+    getProducts(),
+    getBlogPosts(),
+    getTestimonials(),
+    getPortfolioProjects(),
+  ]);
+
+  const page = await prisma.page.findUnique({ where: { slug: '' } });
+
   return (
     <main>
-      <Navbar />
-      <Hero />
-      <ServicesEcosystem />
-      <AboutSection />
-      <ProductsSection />
-      <InfrastructureMarquee />
-      <PortfolioSection />
-      <ProcessRoadmap />
-      <WhyChooseUs />
-      <ReviewsSection />
-      <BlogSection />
+      {page?.schemaMarkup && (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: page.schemaMarkup }} />
+      )}
+      <PageRenderer 
+        slug="" 
+        collections={{ services, products, blogs, reviews, portfolio }} 
+      />
     </main>
   );
 }

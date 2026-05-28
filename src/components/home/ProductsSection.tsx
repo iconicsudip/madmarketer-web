@@ -10,7 +10,7 @@ import styles from './ProductsSection.module.css';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const products = [
+const fallbackProducts = [
   {
     id: 'madrcs',
     title: 'MADRCS',
@@ -32,7 +32,7 @@ const products = [
 ];
 
 // Extracted Card component to manage individual 3D hover states
-function ProductCard({ product }: { product: typeof products[0] }) {
+function ProductCard({ product }: { product: any }) {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
 
@@ -111,8 +111,10 @@ function ProductCard({ product }: { product: typeof products[0] }) {
   );
 }
 
-export default function ProductsSection() {
+export default function ProductsSection({ initialProducts = [] }: { initialProducts?: any[] }) {
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const activeData = initialProducts.length > 0 ? initialProducts : fallbackProducts;
 
   useGSAP(() => {
     if (!containerRef.current) return;
@@ -145,15 +147,11 @@ export default function ProductsSection() {
   return (
     <section className={styles.productsSection} ref={containerRef}>
       <div className="container">
-        
-        {/* Intentionally removing massive heading here since the user's screenshot focuses entirely on the vast cards */}
-
         <div className={styles.cardsContainer} style={{ perspective: "1500px" }}>
-          {products.map((product) => (
+          {activeData.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>
-        
       </div>
     </section>
   );

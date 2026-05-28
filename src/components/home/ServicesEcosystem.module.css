@@ -200,3 +200,27 @@
 .exploreBtn:hover {
   opacity: 0.8;
 }
+
+@media (max-width: 768px) {
+  .servicesSection {
+    padding-top: 80px;
+  }
+  
+  .heading {
+    font-size: 2rem;
+    text-align: center;
+  }
+  
+  .cardWrapper {
+    width: 80vw;
+    height: 400px;
+  }
+  
+  .carouselTrack {
+    gap: 1.5rem;
+  }
+  
+  .carouselContainer {
+    padding: 2rem 5vw;
+  }
+}

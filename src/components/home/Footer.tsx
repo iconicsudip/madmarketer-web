@@ -1,7 +1,34 @@
-'use client';
 import styles from './Footer.module.css';
+import NewsletterForm from './NewsletterForm';
+import { getSiteSettings } from '@/app/actions/cms';
 
-export default function Footer() {
+export default async function Footer() {
+  const settings = await getSiteSettings();
+  let menus: { title: string, links: { label: string, url: string }[] }[] = [];
+  try {
+    if (settings?.footerMenus) {
+      menus = JSON.parse(settings.footerMenus);
+    }
+  } catch (e) {
+    // Ignore invalid JSON
+  }
+
+  // Default menu if none configured
+  if (menus.length === 0) {
+    menus = [
+      {
+        title: "Company",
+        links: [
+          { label: "About", url: "/about" },
+          { label: "Services", url: "/services" },
+          { label: "Products", url: "/products" },
+          { label: "DoConnect OS", url: "/doconnect" },
+          { label: "Sitemap", url: "/sitemap.xml" }
+        ]
+      }
+    ];
+  }
+
   return (
     <footer className={styles.footerWrap}>
       <div className="container">
@@ -9,15 +36,12 @@ export default function Footer() {
         {/* Newsletter Card */}
         <div className={styles.newsletterCard}>
           <div className={styles.newsletterText}>
-            <h2>Get the Latest Updates</h2>
-            <p>No spam. Just helpful AI writing insights, straight to you.</p>
+            <h2>{settings?.footerNewsletterTitle || "Get the Latest Updates"}</h2>
+            <p>{settings?.footerNewsletterDesc || "No spam. Just helpful AI writing insights, straight to you."}</p>
           </div>
           <div className={styles.newsletterFormWrap}>
-            <form className={styles.formGroup} onSubmit={(e) => e.preventDefault()}>
-              <input type="email" placeholder="Enter your email address" required />
-              <button type="submit">Subscribe</button>
-            </form>
-            <p className={styles.disclaimer}>By subscribing you agree to with our Privacy Policy</p>
+            <NewsletterForm />
+            <p className={styles.disclaimer}>By subscribing you agree to with our <a href="/privacy-policy" style={{color: 'inherit', textDecoration: 'underline'}}>Privacy Policy</a></p>
           </div>
         </div>
 
@@ -26,43 +50,41 @@ export default function Footer() {
           <div className={styles.brandCol}>
             <img src="/logo.png" alt="Mad Marketer" className={styles.footerLogo} />
             <p className={styles.brandDesc}>
-              Automatically generate blog articles, website copy, landing pages & digital ads for your business in seconds.
+              {settings?.footerBrandDesc || "Automatically generate blog articles, website copy, landing pages & digital ads for your business in seconds."}
             </p>
             <div className={styles.socialIcons}>
-              <a href="#" className={styles.socialIcon}><span className={styles.srOnly}>Facebook</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg></a>
-              <a href="#" className={styles.socialIcon}><span className={styles.srOnly}>Pinterest</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></a>
-              <a href="#" className={styles.socialIcon}><span className={styles.srOnly}>Instagram</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg></a>
-              <a href="#" className={styles.socialIcon}><span className={styles.srOnly}>Dribbble</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M8.56 2.75c4.37 6.03 6.02 9.42 8.03 17.72m2.54-15.38c-3.72 4.35-8.94 5.66-16.88 5.85m19.5 1.9c-3.5-.93-6.63-.82-8.94 0-2.58.92-5.01 2.86-7.44 6.32"></path></svg></a>
+              {settings?.socialFacebook && <a href={settings.socialFacebook} target="_blank" rel="noopener noreferrer" className={styles.socialIcon}><span className={styles.srOnly}>Facebook</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg></a>}
+              {settings?.socialInstagram && <a href={settings.socialInstagram} target="_blank" rel="noopener noreferrer" className={styles.socialIcon}><span className={styles.srOnly}>Instagram</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg></a>}
+              {settings?.socialTwitter && <a href={settings.socialTwitter} target="_blank" rel="noopener noreferrer" className={styles.socialIcon}><span className={styles.srOnly}>Twitter</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg></a>}
+              {settings?.socialLinkedIn && <a href={settings.socialLinkedIn} target="_blank" rel="noopener noreferrer" className={styles.socialIcon}><span className={styles.srOnly}>LinkedIn</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg></a>}
+              {settings?.socialYoutube && <a href={settings.socialYoutube} target="_blank" rel="noopener noreferrer" className={styles.socialIcon}><span className={styles.srOnly}>YouTube</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33 2.78 2.78 0 0 0 1.94 2c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.33 29 29 0 0 0-.46-5.33z"></path><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon></svg></a>}
+              
+              {(!settings?.socialFacebook && !settings?.socialInstagram && !settings?.socialTwitter && !settings?.socialLinkedIn && !settings?.socialYoutube) && (
+                <>
+                  <a href="#" className={styles.socialIcon}><span className={styles.srOnly}>Facebook</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg></a>
+                  <a href="#" className={styles.socialIcon}><span className={styles.srOnly}>Instagram</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg></a>
+                </>
+              )}
             </div>
           </div>
-          <div className={styles.linkGroup}>
-            <h4>Product</h4>
-            <a href="#">Blockchain</a>
-            <a href="#">Career</a>
-            <a href="#">Ai App</a>
-            <a href="#">Shop</a>
-            <a href="#">Checkout</a>
-          </div>
-          <div className={styles.linkGroup}>
-            <h4>Company</h4>
-            <a href="#">About</a>
-            <a href="#">Features</a>
-            <a href="#">Services</a>
-            <a href="#">Pricing</a>
-            <a href="#">Faqs</a>
-          </div>
-          <div className={styles.linkGroup}>
-            <h4>Support</h4>
-            <a href="#">Faqs</a>
-            <a href="#">Pricing Plan</a>
-            <a href="#">Features</a>
-            <a href="#">Our Team</a>
-            <a href="#">Team Details</a>
-          </div>
+          
+          {menus.map((menu, i) => (
+            <div key={i} className={styles.linkGroup}>
+              <h4>{menu.title}</h4>
+              {menu.links.map((link, j) => (
+                <a key={j} href={link.url}>{link.label}</a>
+              ))}
+            </div>
+          ))}
         </div>
         
         <div className={styles.footerBottom}>
-          <p>&copy; {new Date().getFullYear()} Mad Marketer. All rights reserved.</p>
+          <p>{settings?.footerCopyright || `© ${new Date().getFullYear()} Mad Marketer. All rights reserved.`}</p>
+          <div className={styles.policyLinks} style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap', marginTop: '1rem', justifyContent: 'center' }}>
+            <a href="/privacy-policy" style={{ color: '#888', textDecoration: 'none', fontSize: '0.9rem' }}>Privacy Policy</a>
+            <a href="/terms-and-conditions" style={{ color: '#888', textDecoration: 'none', fontSize: '0.9rem' }}>Terms & Conditions</a>
+            <a href="/refund-policy" style={{ color: '#888', textDecoration: 'none', fontSize: '0.9rem' }}>Refund Policy</a>
+          </div>
         </div>
 
       </div>

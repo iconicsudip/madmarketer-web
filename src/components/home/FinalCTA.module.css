@@ -37,7 +37,7 @@
 .ctaContainer {
   position: relative;
   z-index: 10;
-  max-width: 800px;
+  max-width: 1024px;
 }
 
 .heading {

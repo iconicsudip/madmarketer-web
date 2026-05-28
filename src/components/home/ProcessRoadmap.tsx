@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useEffect } from 'react';
+import { useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
@@ -8,166 +8,78 @@ import styles from './ProcessRoadmap.module.css';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const steps = [
-  {
-    num: '01',
-    title: 'Discovery & Strategy',
-    desc: 'Our app consulting team analyzes business goals, target users, market trends, and technical needs to craft a clear strategy and roadmap.'
-  },
-  {
-    num: '02',
-    title: 'Design & Prototyping',
-    desc: 'Our expert UI/UX design team creates engaging interfaces, wireframes, and prototypes for smooth navigation and brand experience.'
-  },
-  {
-    num: '03',
-    title: 'App Development',
-    desc: 'We build bespoke mobile apps using the selected tech stack and modern technologies like AI, and align features with platform standards.'
-  },
-  {
-    num: '04',
-    title: 'Testing & QA',
-    desc: 'Our quality assurance team monitors performance, security, device compatibility, and user journeys to identify issues before release.'
-  },
-  {
-    num: '05',
-    title: 'Deployment & Launch',
-    desc: 'We handle app store submissions, configurations, and release processes while meeting platform guidelines and launch requirements.'
-  },
-  {
-    num: '06',
-    title: 'Post-Launch Support',
-    desc: 'Our support services cover updates, monitoring, feature improvements, and technical assistance based on user feedback.'
-  }
-];
+const DEFAULTS = {
+  heading: 'Our Streamlined Custom Application Development Process From Idea To Launch',
+  description: 'At Mad Marketer, we adopt a structured end-to-end mobile app dev roadmap created specifically to meet your business needs while developing an app.',
+  s1Title: 'Discovery & Strategy',   s1Desc: 'Our app consulting team analyzes business goals, target users, market trends, and technical needs to craft a clear strategy and roadmap.',
+  s2Title: 'Design & Prototyping',   s2Desc: 'Our expert UI/UX design team creates engaging interfaces, wireframes, and prototypes for smooth navigation and brand experience.',
+  s3Title: 'App Development',        s3Desc: 'We build bespoke mobile apps using the selected tech stack and modern technologies like AI, and align features with platform standards.',
+  s4Title: 'Testing & QA',           s4Desc: 'Our quality assurance team monitors performance, security, device compatibility, and user journeys to identify issues before release.',
+  s5Title: 'Deployment & Launch',    s5Desc: 'We handle app store submissions, configurations, and release processes while meeting platform guidelines and launch requirements.',
+  s6Title: 'Post-Launch Support',    s6Desc: 'Our support services cover updates, monitoring, feature improvements, and technical assistance based on user feedback.',
+};
 
-export default function ProcessRoadmap() {
+type ProcessData = Partial<typeof DEFAULTS>;
+
+export default function ProcessRoadmap({ data = {} }: { data?: ProcessData }) {
+  const d = { ...DEFAULTS, ...Object.fromEntries(Object.entries(data).filter(([, v]) => v)) };
   const containerRef = useRef<HTMLDivElement>(null);
-  const svgRef = useRef<SVGSVGElement>(null);
   const pathRef = useRef<SVGPathElement>(null);
+
+  const steps = [
+    { num: '01', title: d.s1Title, desc: d.s1Desc },
+    { num: '02', title: d.s2Title, desc: d.s2Desc },
+    { num: '03', title: d.s3Title, desc: d.s3Desc },
+    { num: '04', title: d.s4Title, desc: d.s4Desc },
+    { num: '05', title: d.s5Title, desc: d.s5Desc },
+    { num: '06', title: d.s6Title, desc: d.s6Desc },
+  ];
 
   useGSAP(() => {
     if (!pathRef.current || !containerRef.current) return;
-
-    // Get total length of the SVG path for drawing animation
     const pathLength = pathRef.current.getTotalLength();
-    
-    // Set initial dash array and offset to hide the line
-    gsap.set(pathRef.current, {
-      strokeDasharray: pathLength,
-      strokeDashoffset: pathLength,
-    });
-
-    // Create a master timeline linked to scroll
+    gsap.set(pathRef.current, { strokeDasharray: pathLength, strokeDashoffset: pathLength });
     const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: containerRef.current,
-        start: "top center",     // Start drawing when section hits center of screen
-        end: "bottom center",    // Finish drawing when section bottom hits center
-        scrub: 1,                // Smooth scrubbing
-      }
+      scrollTrigger: { trigger: containerRef.current, start: 'top center', end: 'bottom center', scrub: 1 }
     });
-
-    // Animate the line drawing
-    tl.to(pathRef.current, {
-      strokeDashoffset: 0,
-      ease: "none",
-    }, 0);
-
-    // Stagger the card reveals based on timeline progress
+    tl.to(pathRef.current, { strokeDashoffset: 0, ease: 'none' }, 0);
     const cards = gsap.utils.toArray(`.${styles.card}`);
     cards.forEach((card, i) => {
-      // Reveal each card evenly across the timeline duration (0 to 1 progress)
-      // Card 1 at 0%, Card 2 at 20%, etc.
-      const startTime = i * (1 / (cards.length - 1));
-      
-      tl.fromTo(card as Element, 
-        { 
-          y: 50, 
-          opacity: 0,
-          scale: 0.9,
-          boxShadow: '0px 0px 0px rgba(237, 28, 36, 0)'
-        },
-        { 
-          y: 0, 
-          opacity: 1, 
-          scale: 1,
-          boxShadow: '0px 0px 40px rgba(237, 28, 36, 0.15)',
-          duration: 0.1, 
-          ease: "back.out(1.7)"
-        }, 
-        startTime // insert into timeline at specific calculated time
+      tl.fromTo(card as Element,
+        { y: 50, opacity: 0, scale: 0.9, boxShadow: '0px 0px 0px rgba(237, 28, 36, 0)' },
+        { y: 0, opacity: 1, scale: 1, boxShadow: '0px 0px 40px rgba(237, 28, 36, 0.15)', duration: 0.1, ease: 'back.out(1.7)' },
+        i * (1 / (cards.length - 1))
       );
     });
-
   }, { scope: containerRef });
 
   return (
     <section className={styles.roadmapSection} ref={containerRef}>
       <div className="container">
-        
         <div className={styles.header}>
           <h2 className={styles.heading}>
-            Our Streamlined Custom Application<br/>
-            <span className={styles.redText}>Development Process From Idea To Launch</span>
+            {d.heading?.split('From Idea To Launch')[0]}
+            {d.heading?.includes('From Idea To Launch') && (
+              <span className={styles.redText}>From Idea To Launch</span>
+            )}
+            {!d.heading?.includes('From Idea To Launch') && ''}
           </h2>
-          <p className={styles.description}>
-            At Mad Marketer, we adopt a structured end-to-end mobile app dev roadmap created specifically to meet your business needs while developing an app. Among the top app developing companies in the US, our developers manage the complete lifecycle, from the discovery phase and intuitive UX/UI designs to deployment. This transparent, collaborative process ensures shorter time-to-market, predictable delivery, and high-performance AI-powered apps built with business goals in mind to maximize ROI.
-          </p>
+          <p className={styles.description}>{d.description}</p>
         </div>
 
         <div className={styles.roadmapGrid}>
-          
-          {/* Connecting SVG Path running behind cards */}
           <div className={styles.svgContainer}>
-            <svg 
-              ref={svgRef}
-              className={styles.connectingLine} 
-              viewBox="0 0 1000 600" 
-              preserveAspectRatio="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              {/* Complex path weaving through the 6 grid cells */}
-              <path 
-                ref={pathRef}
-                d="M 166 100 
-                   L 500 100 
-                   L 500 250 
-                   L 833 250 
-                   L 833 400 
-                   L 500 400 
-                   L 500 550 
-                   L 166 550" 
-                fill="none" 
-                stroke="var(--primary-red)" 
-                strokeWidth="4" 
-                vectorEffect="non-scaling-stroke"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path 
-                d="M 166 100 
-                   L 500 100 
-                   L 500 250 
-                   L 833 250 
-                   L 833 400 
-                   L 500 400 
-                   L 500 550 
-                   L 166 550" 
-                fill="none" 
-                stroke="rgba(255, 255, 255, 0.05)" 
-                strokeWidth="4" 
-                vectorEffect="non-scaling-stroke"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                style={{ zIndex: -1, position: 'absolute' }}
-              />
+            <svg ref={undefined} className={styles.connectingLine} viewBox="0 0 1000 600" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+              <path ref={pathRef}
+                d="M 166 100 L 500 100 L 500 250 L 833 250 L 833 400 L 500 400 L 500 550 L 166 550"
+                fill="none" stroke="var(--primary-red)" strokeWidth="4" vectorEffect="non-scaling-stroke" strokeLinecap="round" strokeLinejoin="round" />
+              <path d="M 166 100 L 500 100 L 500 250 L 833 250 L 833 400 L 500 400 L 500 550 L 166 550"
+                fill="none" stroke="rgba(255, 255, 255, 0.05)" strokeWidth="4" vectorEffect="non-scaling-stroke" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </div>
 
-          {/* Cards */}
           {steps.map((step, i) => (
-            <div key={i} className={`${styles.cardWrapper} ${styles[`cardPos${i+1}`]}`}>
+            <div key={i} className={`${styles.cardWrapper} ${styles[`cardPos${i + 1}`]}`}>
               <div className={styles.card}>
                 <div className={styles.numberBadge}>{step.num}</div>
                 <h3 className={styles.cardTitle}>{step.title}</h3>
@@ -175,9 +87,7 @@ export default function ProcessRoadmap() {
               </div>
             </div>
           ))}
-
         </div>
-
       </div>
     </section>
   );

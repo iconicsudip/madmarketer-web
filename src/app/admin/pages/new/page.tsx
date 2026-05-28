@@ -1,78 +1,44 @@
-'use client';
-
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import styles from '../../admin.module.css';
+import { createPage } from '@/app/actions/cms';
+import { redirect } from 'next/navigation';
 import Link from 'next/link';
 
-export default function NewPage() {
-  const router = useRouter();
-  const [loading, setLoading] = useState(false);
-
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setLoading(true);
-    
-    const formData = new FormData(e.currentTarget);
-    const data = {
-      title: formData.get('title'),
-      slug: formData.get('slug'),
-      metaDescription: formData.get('metaDescription'),
-      content: formData.get('content'),
-    };
-
-    try {
-      const res = await fetch('/api/pages', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      });
-
-      if (res.ok) {
-        router.push('/admin/pages');
-        router.refresh();
-      } else {
-        const err = await res.json();
-        alert('Error: ' + err.message);
-      }
-    } catch (error) {
-      alert('Failed to save page');
-    } finally {
-      setLoading(false);
-    }
+export default function NewPageAdmin() {
+  async function handleSubmit(formData: FormData) {
+    'use server';
+    await createPage({
+      title: formData.get('title') as string,
+      slug: formData.get('slug') as string,
+      metaDescription: formData.get('metaDescription') as string,
+      content: formData.get('content') as string,
+    });
+    redirect('/admin/pages');
   }
 
+  const inputStyle = { width: '100%', padding: '0.75rem', marginBottom: '1rem', background: '#222', border: '1px solid #444', color: '#fff', borderRadius: '4px' };
+
   return (
-    <div>
-      <div className={styles.pageHeader}>
-        <h1 className={styles.title}>Create New Page</h1>
-        <Link href="/admin/pages" className="btn" style={{ border: '1px solid var(--card-border)' }}>Cancel</Link>
+    <div style={{ maxWidth: '1024px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem' }}>
+        <Link href="/admin/pages" style={{ color: '#888', textDecoration: 'none' }}>&larr; Back</Link>
+        <h1 style={{ fontSize: '2rem', margin: 0 }}>Create New Page</h1>
       </div>
-      
-      <div style={{ backgroundColor: 'var(--card-bg)', padding: '2rem', borderRadius: '12px', border: '1px solid var(--card-border)', maxWidth: '800px' }}>
-        <form onSubmit={handleSubmit}>
-          <div className={styles.formGroup}>
-            <label className={styles.label}>Page Title</label>
-            <input type="text" name="title" required className={styles.input} placeholder="e.g. Next.js SEO Guide" />
-          </div>
-          
-          <div className={styles.formGroup}>
-            <label className={styles.label}>URL Slug</label>
-            <input type="text" name="slug" required className={styles.input} placeholder="e.g. nextjs-seo-guide" />
-          </div>
 
-          <div className={styles.formGroup}>
-            <label className={styles.label}>Meta Description</label>
-            <input type="text" name="metaDescription" required className={styles.input} placeholder="Brief summary for search engines" />
-          </div>
+      <div style={{ background: '#111', padding: '2rem', borderRadius: '8px', border: '1px solid #333' }}>
+        <form action={handleSubmit}>
+          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Page Title</label>
+          <input name="title" placeholder="e.g. About Us" required style={inputStyle} />
 
-          <div className={styles.formGroup}>
-            <label className={styles.label}>Content (HTML Supported)</label>
-            <textarea name="content" required className={styles.textarea} placeholder="<h2>Introduction</h2><p>Write your content here...</p>" />
-          </div>
+          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>URL Slug</label>
+          <input name="slug" placeholder="e.g. about" required style={inputStyle} />
 
-          <button type="submit" className="btn btn-primary" disabled={loading}>
-            {loading ? 'Saving...' : 'Publish Page'}
+          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Meta Description (SEO)</label>
+          <textarea name="metaDescription" placeholder="Brief description for search engines" style={{ ...inputStyle, height: '80px' }} />
+
+          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Page Content (HTML/Markdown)</label>
+          <textarea name="content" placeholder="Full page content..." style={{ ...inputStyle, height: '300px', fontFamily: 'monospace' }} />
+
+          <button type="submit" style={{ background: '#ED1C24', color: '#fff', border: 'none', padding: '0.75rem 2rem', borderRadius: '4px', cursor: 'pointer', fontSize: '1.1rem', marginTop: '1rem' }}>
+            Publish Page
           </button>
         </form>
       </div>

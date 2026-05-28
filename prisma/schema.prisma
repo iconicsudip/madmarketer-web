@@ -11,15 +11,150 @@ datasource db {
 }
 
 model Page {
-  id              String   @id @default(cuid())
-  slug            String   @unique
+  id              String        @id @default(cuid())
+  slug            String        @unique
   title           String
+  metaTitle       String?
   metaDescription String
-  content         String
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  keywords        String?
+  ogImage         String?
+  schemaMarkup    String?
+  content         String        @default("")
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  sections        PageSection[]
   
   // Connect related pages for SEO internal linking
-  relatedTo       Page[]   @relation("RelatedPages")
-  relatedFrom     Page[]   @relation("RelatedPages")
+  relatedTo       Page[]        @relation("RelatedPages")
+  relatedFrom     Page[]        @relation("RelatedPages")
 }
+
+model PageSection {
+  id         String   @id @default(cuid())
+  pageId     String
+  page       Page     @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  type       String   // e.g. 'hero', 'text', 'cta', 'features', 'image_text', 'faq'
+  content    String   // JSON stored as string
+  orderIndex Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([pageId])
+}
+
+model Service {
+  id        String   @id @default(cuid())
+  title     String
+  category  String
+  slug      String
+  desc      String
+  image     String
+  metaTitle       String?
+  metaDescription String?
+  keywords        String?
+  ogImage         String?
+  schemaMarkup    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Product {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  image       String
+  pill        String
+  link        String
+  glowColor   String?
+  metaTitle       String?
+  metaDescription String?
+  keywords        String?
+  ogImage         String?
+  schemaMarkup    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model SiteSettings {
+  id                String   @id @default("default") // Singleton
+  siteName          String?
+  defaultMetaTitle  String?
+  defaultMetaDesc   String?
+  ogImage           String?
+  googleAnalyticsId String?
+  customScripts     String?
+  footerMenus       String?
+  customSitemapUrls String?
+  overrideSitemap   Boolean  @default(false)
+  customRobotsTxt   String?
+  footerNewsletterTitle String?
+  footerNewsletterDesc  String?
+  footerBrandDesc       String?
+  footerCopyright       String?
+  socialFacebook        String?
+  socialInstagram       String?
+  socialTwitter         String?
+  socialLinkedIn        String?
+  socialYoutube         String?
+  privacyPolicy         String?
+  termsConditions       String?
+  refundPolicy          String?
+  updatedAt         DateTime @updatedAt
+}
+
+model BlogPost {
+  id              String   @id @default(cuid())
+  title           String
+  slug            String   @unique
+  category        String
+  image           String
+  excerpt         String?
+  content         String?
+  date            String?
+  metaTitle       String?
+  metaDescription String?
+  keywords        String?
+  ogImage         String?
+  schemaMarkup    String?
+  tags            String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model Testimonial {
+  id        String   @id @default(cuid())
+  company   String
+  logoName  String?  // Store icon name (e.g. 'Hexagon') since we can't store React components
+  name      String
+  role      String
+  content   String
+  rating    Int
+  avatar    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model PortfolioProject {
+  id        String   @id @default(cuid())
+  slug      String?  @unique
+  client    String
+  title     String
+  image     String
+  stats     String?  // Store JSON string of stats array [{value, label}]
+  content   String?  // Markdown content for the case study
+  metaTitle       String?
+  metaDescription String?
+  keywords        String?
+  ogImage         String?
+  schemaMarkup    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Stores editable content for each homepage section as JSON
+model HomepageContent {
+  id        String   @id // e.g. "hero", "about", "whychooseus"
+  data      String   // JSON string
+  updatedAt DateTime @updatedAt
+}
+

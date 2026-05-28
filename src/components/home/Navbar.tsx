@@ -1,11 +1,14 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { Menu, X } from 'lucide-react';
 import styles from './Navbar.module.css';
 
 export default function Navbar() {
   const pathname = usePathname();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navItems = [
     { name: 'Home', path: '/' },
@@ -88,14 +91,24 @@ export default function Navbar() {
                   {item.name}
                 </span>
               ) : (
-                <Link 
-                  href={item.path} 
+                <Link
+                  href={item.path}
                   className={`${styles.navLink} ${pathname === item.path || (item.path !== '/' && pathname.startsWith(item.path)) ? styles.active : ''}`}
                 >
                   {item.name}
                 </Link>
               )}
-              
+
+              {/* Products Dropdown */}
+              {item.name === 'Products' && (
+                <div className={styles.dropdownContent}>
+                  <Link href="/services">All Services</Link>
+                  <Link href="/products">All Products</Link>
+                  <Link href="/services/tools/doconnect">DoConnect OS</Link>
+                  <Link href="/services/tools/madrcs">MadRCS</Link>
+                </div>
+              )}
+
               {/* Mega Menu Dropdown for Services */}
               {item.name === 'Services' && (
                 <div className={styles.megaMenu}>
@@ -129,10 +142,70 @@ export default function Navbar() {
 
         <div className={styles.ctaContainer}>
           <Link href="/contact" className={styles.ctaButton}>
-            Start AI Consultation
+            Start Consultation
           </Link>
+
+          <button
+            className={styles.mobileMenuBtn}
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Toggle Menu"
+          >
+            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
         </div>
       </nav>
+
+      {/* Mobile Menu Drawer */}
+      <div className={`${styles.mobileDrawer} ${mobileMenuOpen ? styles.mobileDrawerOpen : ''}`}>
+        <div className={styles.mobileDrawerInner}>
+          {navItems.map((item) => (
+            <div key={item.name} className={styles.mobileNavItem}>
+              {item.path === '#' ? (
+                <span className={styles.mobileNavLink}>{item.name}</span>
+              ) : (
+                <Link
+                  href={item.path}
+                  className={styles.mobileNavLink}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  {item.name}
+                </Link>
+              )}
+
+              {/* Simplified Mobile Mega Menu */}
+              {item.name === 'Services' && (
+                <div className={styles.mobileSubMenu}>
+                  {megaMenuCategories.map((cat, idx) => (
+                    <div key={idx} className={styles.mobileCategory}>
+                      <h4 className={styles.mobileCategoryTitle}>{cat.title}</h4>
+                      <ul className={styles.mobileCategoryList}>
+                        {cat.links.map(link => (
+                          <li key={link.slug}>
+                            <Link
+                              href={`${cat.basePath}/${link.slug}`}
+                              className={styles.mobileSubLink}
+                              onClick={() => setMobileMenuOpen(false)}
+                            >
+                              {link.name}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
+          <Link
+            href="/contact"
+            className={styles.mobileCtaButton}
+            onClick={() => setMobileMenuOpen(false)}
+          >
+            Start Consultation
+          </Link>
+        </div>
+      </div>
     </header>
   );
 }
