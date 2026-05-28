@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { LayoutDashboard, FileText, Settings, Home, Briefcase, Package, BookOpen, Layout, Star, Map } from 'lucide-react';
+import { LayoutDashboard, FileText, Settings, Home, Briefcase, Package, BookOpen, Layout, Star, Map, LogOut } from 'lucide-react';
 import styles from './admin.module.css';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -51,6 +51,19 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             Public Site
           </Link>
         </nav>
+
+        <div style={{ marginTop: 'auto', paddingTop: '2rem' }}>
+          <form action={async () => {
+            'use server';
+            const { logoutAction } = await import('@/app/actions/auth');
+            await logoutAction();
+          }}>
+            <button type="submit" className={styles.navItem} style={{ width: '100%', background: 'transparent', border: 'none', textAlign: 'left', cursor: 'pointer', color: '#ff6b6b' }}>
+              <LogOut size={20} />
+              Logout
+            </button>
+          </form>
+        </div>
 
       </aside>
       <main className={styles.mainContent}>
