@@ -9,7 +9,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   return (
     <div className={styles.adminLayout}>
       <input type="checkbox" id="mobile-menu-toggle" className={styles.mobileMenuToggle} />
-      
+
       <div className={styles.mobileTopBar}>
         <h2 style={{ fontSize: '1.25rem', margin: 0, fontWeight: 700 }}>SEO Admin</h2>
         <label htmlFor="mobile-menu-toggle" className={styles.hamburger}>
