@@ -140,6 +140,20 @@ function FAQSection({ data }: { data: Record<string, string> }) {
   );
 }
 
+function IframeSection({ data }: { data: Record<string, string> }) {
+  return (
+    <section style={{ width: '100%', background: 'var(--dark-bg)', padding: '4rem 0' }}>
+      <div className="container" style={{ maxWidth: '1200px', margin: '0 auto' }}>
+        {data.heading && <h2 style={{ fontSize: '2.5rem', fontWeight: 700, marginBottom: '2rem', textAlign: 'center' }}>{data.heading}</h2>}
+        <iframe 
+          src={data.url} 
+          style={{ width: '100%', height: data.height ? `${data.height}px` : '1024px', border: 'none', borderRadius: '16px' }} 
+        />
+      </div>
+    </section>
+  );
+}
+
 import {
   ProductHeroSection,
   ProductSplitFeaturesSection,
@@ -211,6 +225,7 @@ export default async function PageRenderer({
           case 'features': return <FeaturesSection key={section.id} data={data} />;
           case 'image_text': return <ImageTextSection key={section.id} data={data} />;
           case 'faq': return <FAQSection key={section.id} data={data} />;
+          case 'iframe': return <IframeSection key={section.id} data={data} />;
           case 'product_hero': return <ProductHeroSection key={section.id} data={data} />;
           case 'product_split_features': return <ProductSplitFeaturesSection key={section.id} data={data} />;
           case 'product_bento_grid': return <ProductBentoGridSection key={section.id} data={data} />;

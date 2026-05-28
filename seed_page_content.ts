@@ -149,6 +149,15 @@ async function main() {
             imagePosition: 'right'
           }),
           orderIndex: 1
+        },
+        {
+          type: 'iframe',
+          content: JSON.stringify({ 
+            heading: 'Send us a message',
+            url: 'https://doconnect.madconx.app/f/cmppggp0y000fqeyfcnhttwh8', 
+            height: '1024' 
+          }),
+          orderIndex: 2
         }
       ];
     } else if (page.slug === 'blog') {
