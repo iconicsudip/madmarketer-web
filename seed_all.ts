@@ -6,15 +6,15 @@ const scripts = [
   'seed_home_sections.ts',
   'seed_page_content.ts',
   'seed_generic_pages.ts',
-  'seed_doconnect.ts',
-  'seed_madrcs.ts',
   'seed_tools.ts',
   'seed_blogs.ts',
   'expand_blogs.ts',
   'update_pages_seo.ts',
   'update_seo_content.ts',
+  'migrate_footer.ts',
+  'seed_doconnect.ts',
   'update_doconnect_pricing.ts',
-  'migrate_footer.ts'
+  'seed_madrcs.ts'
 ];
 
 console.log('--- Starting full database seed ---');
