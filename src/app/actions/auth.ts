@@ -16,7 +16,7 @@ export async function loginAction(prevState: any, formData: FormData) {
 
   if (username === expectedUser && password === expectedPassword) {
     // Generate a simple token
-    const token = btoa(`${username}:${password}`);
+    const token = `${username}:${password}`;
     
     // Set cookie
     (await cookies()).set('admin_token', token, {
