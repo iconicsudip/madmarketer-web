@@ -2,6 +2,7 @@ import FinalCTA from '@/components/home/FinalCTA';
 import PageRenderer from '@/components/PageRenderer';
 import { prisma } from '@/lib/prisma';
 import { Metadata } from 'next';
+import ContactForm from '@/components/ContactForm';
 
 export async function generateMetadata(): Promise<Metadata> {
   const page = await prisma.page.findUnique({ where: { slug: 'contact' } });
@@ -35,46 +36,8 @@ export default async function ContactPage() {
     </div>
   ) : (
     <div style={{ backgroundColor: 'var(--dark-bg)', paddingBottom: '100px' }}>
-      <div className="container" style={{ textAlign: 'center' }}>
-        <form style={{ 
-          maxWidth: '600px', 
-          margin: '0 auto', 
-          background: 'rgba(255, 255, 255, 0.02)',
-          padding: '3rem',
-          borderRadius: '24px',
-          border: '1px solid rgba(255, 255, 255, 0.05)',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '1.5rem',
-          textAlign: 'left'
-        }}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-            <label style={{ fontFamily: 'var(--font-inter)', fontSize: '0.9rem', color: '#fff' }}>Name</label>
-            <input type="text" style={{ padding: '1rem', borderRadius: '12px', background: 'rgba(255, 255, 255, 0.05)', border: '1px solid rgba(255, 255, 255, 0.1)', color: '#fff', outline: 'none' }} />
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-            <label style={{ fontFamily: 'var(--font-inter)', fontSize: '0.9rem', color: '#fff' }}>Work Email</label>
-            <input type="email" style={{ padding: '1rem', borderRadius: '12px', background: 'rgba(255, 255, 255, 0.05)', border: '1px solid rgba(255, 255, 255, 0.1)', color: '#fff', outline: 'none' }} />
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-            <label style={{ fontFamily: 'var(--font-inter)', fontSize: '0.9rem', color: '#fff' }}>How can we help?</label>
-            <textarea rows={4} style={{ padding: '1rem', borderRadius: '12px', background: 'rgba(255, 255, 255, 0.05)', border: '1px solid rgba(255, 255, 255, 0.1)', color: '#fff', outline: 'none', resize: 'none' }}></textarea>
-          </div>
-          <button style={{ 
-            padding: '16px', 
-            borderRadius: '50px', 
-            background: 'var(--primary-red)', 
-            color: '#fff', 
-            fontFamily: 'var(--font-inter)', 
-            fontWeight: 600, 
-            fontSize: '1.05rem', 
-            border: 'none', 
-            cursor: 'pointer',
-            marginTop: '1rem'
-          }}>
-            Submit Request
-          </button>
-        </form>
+      <div className="container">
+        <ContactForm />
       </div>
     </div>
   );

@@ -7,6 +7,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
 import Link from 'next/link';
 import styles from './ProductsSection.module.css';
+import CTAButton from '@/components/CTAButton';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -98,12 +99,12 @@ function ProductCard({ product }: { product: any }) {
           <p className={styles.productDesc}>{product.description}</p>
           
           <div className={styles.cardActions} style={{ transform: "translateZ(20px)" }}>
-            <Link href={product.link} className={styles.learnMoreBtn}>
+            <CTAButton href={product.link} className={styles.learnMoreBtn}>
               Learn More
-            </Link>
-            <Link href="/contact" className={styles.demoBtn}>
+            </CTAButton>
+            <CTAButton href="/contact" className={styles.demoBtn}>
               Get Demo
-            </Link>
+            </CTAButton>
           </div>
         </div>
       </motion.div>

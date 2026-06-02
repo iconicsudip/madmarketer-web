@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Menu, X } from 'lucide-react';
 import styles from './Navbar.module.css';
+import CTAButton from '@/components/CTAButton';
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -141,9 +142,9 @@ export default function Navbar() {
         </div>
 
         <div className={styles.ctaContainer}>
-          <Link href="/contact" className={styles.ctaButton}>
+          <CTAButton href="/contact" className={styles.ctaButton}>
             Start Consultation
-          </Link>
+          </CTAButton>
 
           <button
             className={styles.mobileMenuBtn}
@@ -197,13 +198,13 @@ export default function Navbar() {
               )}
             </div>
           ))}
-          <Link
+          <CTAButton
             href="/contact"
             className={styles.mobileCtaButton}
             onClick={() => setMobileMenuOpen(false)}
           >
             Start Consultation
-          </Link>
+          </CTAButton>
         </div>
       </div>
     </header>

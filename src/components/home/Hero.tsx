@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import styles from './Hero.module.css';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import CTAButton from '@/components/CTAButton';
 
 const slide1Images = [
   "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&q=80",
@@ -41,6 +42,10 @@ type HeroData = {
   ctaText?: string;
   ctaLink?: string;
   imageUrl?: string;
+  ctaActionType?: string;
+  ctaPopupType?: string;
+  ctaPopupSectionType?: string;
+  ctaPopupIframeUrl?: string;
 };
 
 const DEFAULTS: HeroData = {
@@ -96,7 +101,16 @@ export default function Hero({ data = {} }: { data?: HeroData }) {
           <div className={styles.heroContent}>
             <h1 className={styles.heading}>{d.headline || d.heading}</h1>
             <p className={styles.subheading}>{d.subheadline || d.subheading}</p>
-            <a href={d.ctaLink} className={styles.ctaBtn}>{d.ctaText}</a>
+            <CTAButton
+              href={d.ctaLink || '#'}
+              className={styles.ctaBtn}
+              actionType={d.ctaActionType}
+              popupType={d.ctaPopupType}
+              popupSectionType={d.ctaPopupSectionType}
+              popupIframeUrl={d.ctaPopupIframeUrl}
+            >
+              {d.ctaText}
+            </CTAButton>
           </div>
         </motion.div>
       </div>

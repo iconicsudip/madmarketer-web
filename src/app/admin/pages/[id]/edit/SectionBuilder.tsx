@@ -21,6 +21,63 @@ type SectionType = {
   fields: Field[];
 };
 
+// --- Helpers for CTA Popup Behaviors ---
+const getCtaFields = (prefix: string, buttonLabel = 'CTA') => [
+  {
+    key: `${prefix}ActionType`,
+    label: `${buttonLabel} Action Type`,
+    type: 'select' as const,
+    options: [
+      { label: 'Redirect to Page', value: 'redirect' },
+      { label: 'Open Popup', value: 'popup' },
+    ],
+  },
+  {
+    key: `${prefix}PopupType`,
+    label: `${buttonLabel} Popup Content Type`,
+    type: 'select' as const,
+    options: [
+      { label: 'Section Component', value: 'section' },
+      { label: 'Iframe Link', value: 'iframe' },
+    ],
+  },
+  {
+    key: `${prefix}PopupSectionType`,
+    label: `${buttonLabel} Popup Section`,
+    type: 'select' as const,
+    options: [
+      { label: 'Contact Us Form', value: 'contact_form' },
+    ],
+  },
+  {
+    key: `${prefix}PopupIframeUrl`,
+    label: `${buttonLabel} Popup Iframe URL`,
+    type: 'text' as const,
+    placeholder: 'https://...',
+  },
+];
+
+const shouldShowField = (fieldKey: string, fields: Record<string, string>): boolean => {
+  if (fieldKey.endsWith('PopupType')) {
+    const actionKey = fieldKey.replace('PopupType', 'ActionType');
+    return fields[actionKey] === 'popup';
+  }
+  
+  if (fieldKey.endsWith('PopupSectionType')) {
+    const actionKey = fieldKey.replace('PopupSectionType', 'ActionType');
+    const typeKey = fieldKey.replace('PopupSectionType', 'PopupType');
+    return fields[actionKey] === 'popup' && fields[typeKey] === 'section';
+  }
+  
+  if (fieldKey.endsWith('PopupIframeUrl')) {
+    const actionKey = fieldKey.replace('PopupIframeUrl', 'ActionType');
+    const typeKey = fieldKey.replace('PopupIframeUrl', 'PopupType');
+    return fields[actionKey] === 'popup' && fields[typeKey] === 'iframe';
+  }
+  
+  return true;
+};
+
 // --- Section Type Definitions ---
 const SECTION_TYPES: SectionType[] = [
   {
@@ -31,6 +88,7 @@ const SECTION_TYPES: SectionType[] = [
       { key: 'subheadline', label: 'Sub-headline', type: 'textarea', placeholder: 'Supporting text below the headline...' },
       { key: 'ctaText', label: 'CTA Button Text', type: 'text', placeholder: 'e.g. Get Started' },
       { key: 'ctaLink', label: 'CTA Button Link', type: 'url', placeholder: '/contact' },
+      ...getCtaFields('cta', 'CTA Button'),
     ],
   },
   {
@@ -49,8 +107,10 @@ const SECTION_TYPES: SectionType[] = [
       { key: 'subtext', label: 'Sub-text', type: 'text', placeholder: 'Join hundreds of businesses.' },
       { key: 'primaryCtaText', label: 'Primary Button', type: 'text', placeholder: 'Get Started' },
       { key: 'primaryCtaLink', label: 'Primary Link', type: 'url', placeholder: '/contact' },
+      ...getCtaFields('primaryCta', 'Primary Button'),
       { key: 'secondaryCtaText', label: 'Secondary Button', type: 'text', placeholder: 'Learn More' },
       { key: 'secondaryCtaLink', label: 'Secondary Link', type: 'url', placeholder: '/about' },
+      ...getCtaFields('secondaryCta', 'Secondary Button'),
     ],
   },
   {
@@ -120,8 +180,10 @@ const SECTION_TYPES: SectionType[] = [
       { key: 'headline', label: 'Headline', type: 'textarea', placeholder: 'Empower Your Business With Smarter Financial Tools' },
       { key: 'primaryCtaText', label: 'Primary CTA Text', type: 'text', placeholder: 'Start Free Trial' },
       { key: 'primaryCtaLink', label: 'Primary CTA Link', type: 'text', placeholder: '#' },
+      ...getCtaFields('primaryCta', 'Primary Button'),
       { key: 'secondaryCtaText', label: 'Secondary CTA Text', type: 'text', placeholder: 'Watch Demo' },
       { key: 'secondaryCtaLink', label: 'Secondary CTA Link', type: 'text', placeholder: '#' },
+      ...getCtaFields('secondaryCta', 'Secondary Button'),
       { key: 'heroImage', label: 'Main Composition Image URL', type: 'url', placeholder: 'https://...' },
       { key: 'bgGradient', label: 'Background Gradient', type: 'text', placeholder: 'linear-gradient(...)' },
     ],
@@ -154,6 +216,7 @@ const SECTION_TYPES: SectionType[] = [
       { key: 'subtext', label: 'Sub Text', type: 'textarea', placeholder: 'Plug BrightHub into your financial stack...' },
       { key: 'ctaText', label: 'CTA Text', type: 'text', placeholder: 'View All Integrations' },
       { key: 'ctaLink', label: 'CTA Link', type: 'text', placeholder: '#' },
+      ...getCtaFields('cta', 'CTA Button'),
       { key: 'logos', label: 'Logos (JSON Array of URLs)', type: 'textarea', placeholder: '["url1", "url2", "url3", "url4", "url5"]' },
     ],
   },
@@ -256,8 +319,10 @@ const SECTION_TYPES: SectionType[] = [
       { key: 'subheadline', label: 'Subheadline', type: 'text' },
       { key: 'ctaText', label: 'CTA Text', type: 'text' },
       { key: 'ctaLink', label: 'CTA Link', type: 'text' },
+      ...getCtaFields('cta', 'Primary CTA'),
       { key: 'secondaryCtaText', label: 'Secondary CTA Text', type: 'text' },
       { key: 'secondaryCtaLink', label: 'Secondary CTA Link', type: 'text' },
+      ...getCtaFields('secondaryCta', 'Secondary CTA'),
       { key: 'imageUrl', label: 'Image URL', type: 'text' },
     ],
   },
@@ -277,6 +342,7 @@ const SECTION_TYPES: SectionType[] = [
       { key: 'stats', label: 'Stats (JSON)', type: 'textarea', placeholder: '[]' },
       { key: 'ctaText', label: 'CTA Text', type: 'text' },
       { key: 'ctaLink', label: 'CTA Link', type: 'text' },
+      ...getCtaFields('cta', 'CTA Button'),
     ],
   },
   {
@@ -375,6 +441,7 @@ const SECTION_TYPES: SectionType[] = [
       { key: 'ctaSubtext', label: 'CTA Subtext', type: 'textarea', placeholder: 'Amet convallis...' },
       { key: 'ctaButtonText', label: 'CTA Button Text', type: 'text', placeholder: 'Contact us' },
       { key: 'ctaLink', label: 'CTA Link', type: 'text', placeholder: '/contact' },
+      ...getCtaFields('cta', 'CTA Button'),
       { key: 'accentColor', label: 'Accent Color', type: 'text', placeholder: '#ED1C24' },
     ],
   },
@@ -386,8 +453,10 @@ const SECTION_TYPES: SectionType[] = [
       { key: 'subheading', label: 'Subheading', type: 'textarea', placeholder: 'Transform your business...' },
       { key: 'primaryBtnText', label: 'Primary Button Text', type: 'text', placeholder: 'Start Consultation' },
       { key: 'primaryBtnLink', label: 'Primary Button Link', type: 'text', placeholder: '/contact' },
+      ...getCtaFields('primaryBtn', 'Primary Button'),
       { key: 'secondaryBtnText', label: 'Secondary Button Text', type: 'text', placeholder: 'Build Your System' },
-      { key: 'secondaryBtnLink', label: 'Secondary Button Link', type: 'text', placeholder: '/contact' }
+      { key: 'secondaryBtnLink', label: 'Secondary Button Link', type: 'text', placeholder: '/contact' },
+      ...getCtaFields('secondaryBtn', 'Secondary Button'),
     ],
   }
 ];
@@ -460,8 +529,10 @@ function SectionCard({ section, index, total, onMoveUp, onMoveDown, onDelete, on
       </div>
       {isExpanded && (
         <div style={{ padding: '1.25rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          {def.fields.map(field => (
-            <div key={field.key}>
+          {def.fields
+            .filter((field: any) => shouldShowField(field.key, fields))
+            .map(field => (
+              <div key={field.key}>
               <label style={{ display: 'block', marginBottom: '0.4rem', fontSize: '0.8rem', fontWeight: 600, color: '#888' }}>{field.label}</label>
               {field.type === 'textarea' ? (
                 <textarea value={fields[field.key] || ''} onChange={e => handleChange(field.key, e.target.value)} placeholder={field.placeholder} rows={3} style={{ ...fieldInput, resize: 'vertical', lineHeight: 1.5 }} />

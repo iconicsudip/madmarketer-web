@@ -36,6 +36,8 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
+import { ModalProvider } from "@/components/ModalContext";
+
 export default async function RootLayout({
   children,
 }: Readonly<{
@@ -52,9 +54,11 @@ export default async function RootLayout({
       </head>
       <body suppressHydrationWarning>
         <GlobalBackground />
-        <ConditionalLayout navbar={<Navbar />} footer={<Footer />}>
-          {children}
-        </ConditionalLayout>
+        <ModalProvider>
+          <ConditionalLayout navbar={<Navbar />} footer={<Footer />}>
+            {children}
+          </ConditionalLayout>
+        </ModalProvider>
 
         {settings?.googleAnalyticsId && (
           <>

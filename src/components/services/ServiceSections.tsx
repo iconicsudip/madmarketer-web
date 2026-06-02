@@ -4,6 +4,7 @@ import React, { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import * as LucideIcons from 'lucide-react';
 import Link from 'next/link';
+import CTAButton from '@/components/CTAButton';
 
 // Utility for dynamic icons
 const DynamicIcon = ({ name, size = 24, color = "currentColor", className = "" }: any) => {
@@ -300,9 +301,16 @@ export function ServiceTeamContact({ data }: { data: Record<string, string> }) {
             <p style={{ fontSize: '1.2rem', color: '#aaa', maxWidth: '600px', margin: '0 auto 3rem', lineHeight: 1.6 }}>
               {data.ctaSubtext || 'Take the first step towards building your ultimate operational infrastructure.'}
             </p>
-            <Link href={data.ctaLink || '/contact'} style={{ display: 'inline-block', background: 'var(--primary-red)', color: '#fff', padding: '16px 44px', borderRadius: '50px', fontWeight: 700, fontSize: '1.1rem', textDecoration: 'none', boxShadow: '0 15px 30px rgba(237, 28, 36, 0.4)', transition: 'transform 0.2s, box-shadow 0.2s' }}>
+            <CTAButton
+              href={data.ctaLink || '/contact'}
+              style={{ display: 'inline-block', background: 'var(--primary-red)', color: '#fff', padding: '16px 44px', borderRadius: '50px', fontWeight: 700, fontSize: '1.1rem', textDecoration: 'none', boxShadow: '0 15px 30px rgba(237, 28, 36, 0.4)', transition: 'transform 0.2s, box-shadow 0.2s' }}
+              actionType={data.ctaActionType}
+              popupType={data.ctaPopupType}
+              popupSectionType={data.ctaPopupSectionType}
+              popupIframeUrl={data.ctaPopupIframeUrl}
+            >
               {data.ctaButtonText || 'Contact us'}
-            </Link>
+            </CTAButton>
           </div>
         </div>
       </div>

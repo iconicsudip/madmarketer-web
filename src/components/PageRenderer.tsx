@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/prisma';
 import FAQAccordion from '@/components/services/FAQAccordion';
 import Link from 'next/link';
+import CTAButton from '@/components/CTAButton';
 
 // Home components
 import Hero from '@/components/home/Hero';
@@ -35,9 +36,16 @@ function HeroSection({ data }: { data: Record<string, string> }) {
           </p>
         )}
         {data.ctaText && data.ctaLink && (
-          <Link href={data.ctaLink} style={{ display: 'inline-block', background: 'var(--primary-red)', color: '#fff', padding: '16px 40px', borderRadius: '50px', fontWeight: 600, fontSize: '1.1rem', textDecoration: 'none', transition: 'all 0.3s' }}>
+          <CTAButton
+            href={data.ctaLink}
+            style={{ display: 'inline-block', background: 'var(--primary-red)', color: '#fff', padding: '16px 40px', borderRadius: '50px', fontWeight: 600, fontSize: '1.1rem', textDecoration: 'none', transition: 'all 0.3s' }}
+            actionType={data.ctaActionType}
+            popupType={data.ctaPopupType}
+            popupSectionType={data.ctaPopupSectionType}
+            popupIframeUrl={data.ctaPopupIframeUrl}
+          >
             {data.ctaText}
-          </Link>
+          </CTAButton>
         )}
       </div>
     </div>
@@ -63,14 +71,28 @@ function CtaSection({ data }: { data: Record<string, string> }) {
         {data.subtext && <p style={{ fontSize: '1.2rem', color: 'rgba(255,255,255,0.6)', marginBottom: '3rem' }}>{data.subtext}</p>}
         <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
           {data.primaryCtaText && data.primaryCtaLink && (
-            <Link href={data.primaryCtaLink} style={{ padding: '16px 40px', borderRadius: '50px', background: 'var(--primary-red)', color: '#fff', fontWeight: 600, textDecoration: 'none' }}>
+            <CTAButton
+              href={data.primaryCtaLink}
+              style={{ padding: '16px 40px', borderRadius: '50px', background: 'var(--primary-red)', color: '#fff', fontWeight: 600, textDecoration: 'none' }}
+              actionType={data.primaryCtaActionType}
+              popupType={data.primaryCtaPopupType}
+              popupSectionType={data.primaryCtaPopupSectionType}
+              popupIframeUrl={data.primaryCtaPopupIframeUrl}
+            >
               {data.primaryCtaText}
-            </Link>
+            </CTAButton>
           )}
           {data.secondaryCtaText && data.secondaryCtaLink && (
-            <Link href={data.secondaryCtaLink} style={{ padding: '16px 40px', borderRadius: '50px', background: 'rgba(255,255,255,0.1)', color: '#fff', fontWeight: 600, textDecoration: 'none' }}>
+            <CTAButton
+              href={data.secondaryCtaLink}
+              style={{ padding: '16px 40px', borderRadius: '50px', background: 'rgba(255,255,255,0.1)', color: '#fff', fontWeight: 600, textDecoration: 'none' }}
+              actionType={data.secondaryCtaActionType}
+              popupType={data.secondaryCtaPopupType}
+              popupSectionType={data.secondaryCtaPopupSectionType}
+              popupIframeUrl={data.secondaryCtaPopupIframeUrl}
+            >
               {data.secondaryCtaText}
-            </Link>
+            </CTAButton>
           )}
         </div>
       </div>
