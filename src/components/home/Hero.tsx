@@ -18,6 +18,8 @@ const DEFAULT_IMAGES = [
 ];
 
 type HeroData = {
+  pillText?: string;
+  pillTypography?: string;
   headline?: string;
   headlineTypography?: string;
   heading?: string;
@@ -88,6 +90,14 @@ export default function Hero({ data = {} }: { data?: HeroData }) {
         </div>
         <div className={styles.heroTextContainer}>
           <div className={styles.heroContent}>
+            {d.pillText && (
+              <DynamicText 
+                content={d.pillText} 
+                typography={d.pillTypography} 
+                defaultTag="span" 
+                className={styles.pillText} 
+              />
+            )}
             <DynamicText 
               content={d.headline || d.heading || ''} 
               typography={d.headlineTypography} 
@@ -160,6 +170,14 @@ export default function Hero({ data = {} }: { data?: HeroData }) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.85, ease: 'easeOut', delay: 0.35 }}
         >
+          {d.pillText && (
+            <DynamicText 
+              content={d.pillText} 
+              typography={d.pillTypography} 
+              defaultTag="span" 
+              className={styles.pillText} 
+            />
+          )}
           <DynamicText 
             content={d.headline || d.heading || ''} 
             typography={d.headlineTypography} 

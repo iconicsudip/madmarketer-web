@@ -26,14 +26,27 @@ export default function ProcessRoadmap({ data = {} }: { data?: ProcessData }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const pathRef = useRef<SVGPathElement>(null);
 
-  const steps = [
-    { num: '01', title: d.s1Title, desc: d.s1Desc },
-    { num: '02', title: d.s2Title, desc: d.s2Desc },
-    { num: '03', title: d.s3Title, desc: d.s3Desc },
-    { num: '04', title: d.s4Title, desc: d.s4Desc },
-    { num: '05', title: d.s5Title, desc: d.s5Desc },
-    { num: '06', title: d.s6Title, desc: d.s6Desc },
-  ];
+  let parsedSteps = [];
+  try {
+    if (d.steps) {
+      parsedSteps = typeof d.steps === 'string' ? JSON.parse(d.steps) : d.steps;
+    }
+  } catch {}
+
+  const steps = parsedSteps.length > 0 
+    ? parsedSteps.map((s: any, i: number) => ({
+        num: String(i + 1).padStart(2, '0'),
+        title: s.title || '',
+        desc: s.desc || ''
+      }))
+    : [
+        { num: '01', title: d.s1Title, desc: d.s1Desc },
+        { num: '02', title: d.s2Title, desc: d.s2Desc },
+        { num: '03', title: d.s3Title, desc: d.s3Desc },
+        { num: '04', title: d.s4Title, desc: d.s4Desc },
+        { num: '05', title: d.s5Title, desc: d.s5Desc },
+        { num: '06', title: d.s6Title, desc: d.s6Desc },
+      ];
 
   useGSAP(() => {
     if (!pathRef.current || !containerRef.current) return;

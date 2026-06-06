@@ -99,7 +99,7 @@ export default async function EditPageAdmin({ params }: { params: Promise<{ id: 
                 <label style={{ display: 'block', marginBottom: '0.35rem', fontSize: '0.78rem', fontWeight: 600, color: '#777', textTransform: 'uppercase', letterSpacing: '0.04em' }}>URL Slug</label>
                 <div style={{ position: 'relative' }}>
                   <span style={{ position: 'absolute', left: '0.8rem', top: '50%', transform: 'translateY(-50%)', color: '#555', fontSize: '0.85rem', pointerEvents: 'none' }}>/</span>
-                  <input name="slug" defaultValue={page.slug} required style={{ ...input, paddingLeft: '1.3rem' }} />
+                  <input name="slug" defaultValue={page.slug} required={!isHomePage} readOnly={isHomePage} style={{ ...input, paddingLeft: '1.3rem', ...(isHomePage ? { color: '#888', background: '#111', cursor: 'not-allowed' } : {}) }} />
                 </div>
               </div>
               <div>

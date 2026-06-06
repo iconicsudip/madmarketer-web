@@ -29,14 +29,26 @@ export default function WhyChooseUs({ data = {} }: { data?: WhyData }) {
   const d = { ...DEFAULTS, ...Object.fromEntries(Object.entries(data).filter(([, v]) => v)) };
   const sectionRef = useRef<HTMLDivElement>(null);
 
-  const reasons = [
-    { title: d.r1Title, desc: d.r1Desc },
-    { title: d.r2Title, desc: d.r2Desc },
-    { title: d.r3Title, desc: d.r3Desc },
-    { title: d.r4Title, desc: d.r4Desc },
-    { title: d.r5Title, desc: d.r5Desc },
-    { title: d.r6Title, desc: d.r6Desc },
-  ];
+  let parsedFeatures = [];
+  try {
+    if (d.features) {
+      parsedFeatures = typeof d.features === 'string' ? JSON.parse(d.features) : d.features;
+    }
+  } catch {}
+
+  const reasons = parsedFeatures.length > 0 
+    ? parsedFeatures.map((f: any) => ({
+        title: f.title || '',
+        desc: f.desc || ''
+      }))
+    : [
+        { title: d.r1Title, desc: d.r1Desc },
+        { title: d.r2Title, desc: d.r2Desc },
+        { title: d.r3Title, desc: d.r3Desc },
+        { title: d.r4Title, desc: d.r4Desc },
+        { title: d.r5Title, desc: d.r5Desc },
+        { title: d.r6Title, desc: d.r6Desc },
+      ];
 
   useGSAP(() => {
     if (!sectionRef.current) return;

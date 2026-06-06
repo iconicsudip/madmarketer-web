@@ -2,6 +2,7 @@ import { getPortfolioProjects, createPortfolioProject, deletePortfolioProject, u
 import { Plus, Trash2, Layout, Image as ImageIcon, Code, Type, Tags, Globe, Edit2, X } from 'lucide-react';
 import Link from 'next/link';
 import ImageUploaderField from '@/components/ImageUploaderField';
+import JsonTextAreaField from '@/components/JsonTextAreaField';
 
 export default async function PortfolioAdmin({ searchParams }: { searchParams?: Promise<{ [key: string]: string | string[] | undefined }> }) {
   const projects = await getPortfolioProjects();
@@ -183,10 +184,14 @@ export default async function PortfolioAdmin({ searchParams }: { searchParams?: 
               <ImageUploaderField name="image" defaultValue={editingProject?.image || ''} label="Project Image (Required)" compact />
             </div>
             
-            <div className="input-group">
-              <Code size={18} className="input-icon" style={{ top: '16px' }} />
-              <textarea name="stats" defaultValue={editingProject?.stats || ''} placeholder='JSON Stats e.g. [{"value":"44%","label":"Faster"}]' className="admin-input" style={{ height: '100px', resize: 'vertical', paddingTop: '14px', fontFamily: 'monospace' }} />
-            </div>
+            <JsonTextAreaField
+              name="stats"
+              defaultValue={editingProject?.stats || ''}
+              placeholder='JSON Stats e.g. [{"value":"44%","label":"Faster"}]'
+              exampleData='[{"value":"44%","label":"Faster"},{"value":"10x","label":"ROI"}]'
+              className="admin-input"
+              style={{ height: '100px', resize: 'vertical', paddingTop: '14px', fontFamily: 'monospace' }}
+            />
             
             <div style={{ margin: '2.5rem 0 1.5rem', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '1.5rem' }}>
               <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.1rem', color: 'var(--primary-red)', margin: '0 0 1.25rem 0', fontWeight: 600 }}>

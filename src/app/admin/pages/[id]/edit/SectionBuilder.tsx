@@ -375,7 +375,7 @@ const SECTION_TYPES: SectionType[] = [
       { key: 'headingTypography', label: 'Heading Typography', type: 'typography' },
       { key: 'description', label: 'Description', type: 'textarea' },
       { key: 'descriptionTypography', label: 'Description Typography', type: 'typography' },
-      { key: 'stats', label: 'Stats (JSON)', type: 'textarea', placeholder: '[]' },
+      { key: 'stats', label: 'Stats (JSON)', type: 'textarea', placeholder: '[{"number":"50M+", "label":"Users"}, {"number":"99.9%", "label":"Uptime"}]' },
       { key: 'ctaText', label: 'CTA Text', type: 'text' },
       { key: 'ctaLink', label: 'CTA Link', type: 'text' },
       ...getCtaFields('cta', 'CTA Button'),
@@ -394,7 +394,7 @@ const SECTION_TYPES: SectionType[] = [
     fields: [
       { key: 'heading', label: 'Heading', type: 'text' },
       { key: 'headingTypography', label: 'Heading Typography', type: 'typography' },
-      { key: 'items', label: 'Items (JSON)', type: 'textarea', placeholder: '["Item 1", "Item 2"]' },
+      { key: 'items', label: 'Items (JSON)', type: 'textarea', placeholder: '["Secure Infrastructure", "Lightning Fast API", "Global Network", "24/7 Support"]' },
     ],
   },
   {
@@ -410,7 +410,7 @@ const SECTION_TYPES: SectionType[] = [
     fields: [
       { key: 'heading', label: 'Heading', type: 'text' },
       { key: 'headingTypography', label: 'Heading Typography', type: 'typography' },
-      { key: 'steps', label: 'Steps (JSON)', type: 'textarea', placeholder: '[]' },
+      { key: 'steps', label: 'Steps (JSON)', type: 'textarea', placeholder: '[{"title":"Sign Up", "desc":"Create your free account in seconds."}, {"title":"Integrate", "desc":"Connect our API to your app."}]' },
     ],
   },
   {
@@ -419,7 +419,7 @@ const SECTION_TYPES: SectionType[] = [
     fields: [
       { key: 'heading', label: 'Heading', type: 'text' },
       { key: 'headingTypography', label: 'Heading Typography', type: 'typography' },
-      { key: 'features', label: 'Features (JSON)', type: 'textarea', placeholder: '[]' },
+      { key: 'features', label: 'Features (JSON)', type: 'textarea', placeholder: '[{"title":"Advanced Security", "desc":"Bank-grade encryption for all your data."}]' },
     ],
   },
   {
@@ -545,6 +545,7 @@ function SectionCard({ section, index, total, onMoveUp, onMoveDown, onDelete, on
     try { return JSON.parse(section.content); } catch { return {}; }
   });
   const [isExpanded, setIsExpanded] = useState(index === 0);
+  const [previewModal, setPreviewModal] = useState<{key: string, data: string} | null>(null);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const handleChange = (key: string, value: string) => {
@@ -586,7 +587,25 @@ function SectionCard({ section, index, total, onMoveUp, onMoveDown, onDelete, on
             .filter((field: any) => shouldShowField(field.key, fields))
             .map(field => (
               <div key={field.key}>
-              <label style={{ display: 'block', marginBottom: '0.4rem', fontSize: '0.8rem', fontWeight: 600, color: '#888' }}>{field.label}</label>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
+                <label style={{ fontSize: '0.8rem', fontWeight: 600, color: '#888', margin: 0 }}>{field.label}</label>
+                {field.label?.includes('JSON') && field.placeholder && (
+                  <button 
+                    type="button" 
+                    onClick={() => {
+                      const currentValue = fields[field.key];
+                      let initialValue = currentValue || field.placeholder!;
+                      try {
+                        initialValue = JSON.stringify(JSON.parse(initialValue), null, 2);
+                      } catch {}
+                      setPreviewModal({ key: field.key, data: initialValue });
+                    }} 
+                    style={{ background: 'rgba(237,28,36,0.1)', color: '#ED1C24', border: '1px solid rgba(237,28,36,0.2)', borderRadius: '4px', padding: '2px 8px', fontSize: '0.65rem', fontWeight: 600, cursor: 'pointer', textTransform: 'uppercase', letterSpacing: '0.04em' }}
+                  >
+                    Edit / View JSON
+                  </button>
+                )}
+              </div>
               {field.type === 'image' ? (
                 <ImageUploader
                   value={fields[field.key] || ''}
@@ -750,6 +769,28 @@ function SectionCard({ section, index, total, onMoveUp, onMoveDown, onDelete, on
               )}
             </div>
           ))}
+        </div>
+      )}
+      
+      {previewModal && (
+        <div style={{ position: 'fixed', inset: 0, zIndex: 99999, background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
+          <div style={{ background: '#0a0a0a', border: '1px solid #2a2a2a', borderRadius: '12px', width: '100%', maxWidth: '700px', padding: '1.5rem', boxShadow: '0 20px 40px rgba(0,0,0,0.5)' }}>
+            <h3 style={{ margin: '0 0 1rem', fontSize: '1.1rem', color: '#fff', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              Advanced JSON Editor
+              <button type="button" onClick={() => setPreviewModal(null)} style={{ background: 'none', border: 'none', color: '#888', cursor: 'pointer', fontSize: '1.2rem' }}>✕</button>
+            </h3>
+            <textarea
+              value={previewModal.data}
+              onChange={(e) => setPreviewModal({ ...previewModal, data: e.target.value })}
+              style={{ width: '100%', minHeight: '350px', background: '#111', border: '1px solid #222', borderRadius: '8px', padding: '1rem', overflowX: 'auto', color: '#4ade80', fontSize: '0.85rem', fontFamily: 'monospace', margin: '0 0 1.5rem', resize: 'vertical' }}
+            />
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem' }}>
+              <button type="button" onClick={() => setPreviewModal(null)} style={{ background: 'transparent', border: '1px solid #333', color: '#ccc', borderRadius: '6px', padding: '0.6rem 1.2rem', cursor: 'pointer', fontSize: '0.85rem', fontWeight: 600 }}>Cancel</button>
+              <button type="button" onClick={() => { handleChange(previewModal.key, previewModal.data); setPreviewModal(null); }} style={{ background: 'linear-gradient(135deg,#ED1C24,#c01019)', color: '#fff', border: 'none', borderRadius: '6px', padding: '0.6rem 1.2rem', cursor: 'pointer', fontSize: '0.85rem', fontWeight: 600 }}>
+                Apply Changes
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>
