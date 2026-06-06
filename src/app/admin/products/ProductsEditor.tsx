@@ -3,6 +3,7 @@
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { createProduct, deleteProduct, updateProduct } from '@/app/actions/cms';
+import ImageUploader from '@/components/ImageUploader';
 
 type Product = {
   id: string;
@@ -99,7 +100,11 @@ export default function ProductsEditor({ initialProducts, pages }: { initialProd
             <input value={title} onChange={e => setTitle(e.target.value)} placeholder="Product Title (e.g. MADRCS)" required style={inputStyle} />
             <input value={pill} onChange={e => setPill(e.target.value)} placeholder="Pill Badge (e.g. Business Portal)" required style={inputStyle} />
             <textarea value={description} onChange={e => setDescription(e.target.value)} placeholder="Short description" required style={{...inputStyle, height: '100px'}} />
-            <input value={image} onChange={e => setImage(e.target.value)} placeholder="Image URL" required style={inputStyle} />
+            <ImageUploader
+              label="Product Image *"
+              value={image}
+              onChange={setImage}
+            />
             
             <select value={link} onChange={e => setLink(e.target.value)} required style={{...inputStyle, appearance: 'auto'}}>
               <option value="">Select a Page to Link...</option>

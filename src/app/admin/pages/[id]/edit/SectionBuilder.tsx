@@ -3,12 +3,13 @@
 import React, { useState, useTransition, useEffect, useRef } from 'react';
 import { createPageSection, updatePageSection, deletePageSection, reorderPageSections, getAllTestimonials } from '@/app/actions/cms';
 import { PageSection } from '@prisma/client';
+import ImageUploader from '@/components/ImageUploader';
 
 // --- Types ---
 type Field = {
   key: string;
   label: string;
-  type: 'text' | 'textarea' | 'url' | 'faq_array' | 'select' | 'multi-select';
+  type: 'text' | 'textarea' | 'url' | 'image' | 'image_list' | 'faq_array' | 'select' | 'multi-select' | 'typography';
   options?: { label: string; value: string }[];
   placeholder?: string;
 };
@@ -85,7 +86,9 @@ const SECTION_TYPES: SectionType[] = [
     description: 'Big headline + subtitle + CTA button',
     fields: [
       { key: 'headline', label: 'Headline', type: 'text', placeholder: 'e.g. Grow Your Business With Us' },
+      { key: 'headlineTypography', label: 'Headline Typography', type: 'typography' },
       { key: 'subheadline', label: 'Sub-headline', type: 'textarea', placeholder: 'Supporting text below the headline...' },
+      { key: 'subheadlineTypography', label: 'Sub-headline Typography', type: 'typography' },
       { key: 'ctaText', label: 'CTA Button Text', type: 'text', placeholder: 'e.g. Get Started' },
       { key: 'ctaLink', label: 'CTA Button Link', type: 'url', placeholder: '/contact' },
       ...getCtaFields('cta', 'CTA Button'),
@@ -96,7 +99,9 @@ const SECTION_TYPES: SectionType[] = [
     description: 'A block of formatted text content',
     fields: [
       { key: 'heading', label: 'Heading (Optional)', type: 'text', placeholder: 'Our Story' },
+      { key: 'headingTypography', label: 'Heading Typography', type: 'typography' },
       { key: 'body', label: 'Main Content Text', type: 'textarea', placeholder: 'Write your content here...' },
+      { key: 'bodyTypography', label: 'Body Typography', type: 'typography' },
     ],
   },
   {
@@ -104,7 +109,9 @@ const SECTION_TYPES: SectionType[] = [
     description: 'A prominent section to drive conversions',
     fields: [
       { key: 'heading', label: 'Heading', type: 'text', placeholder: 'Ready to scale?' },
+      { key: 'headingTypography', label: 'Heading Typography', type: 'typography' },
       { key: 'subtext', label: 'Sub-text', type: 'text', placeholder: 'Join hundreds of businesses.' },
+      { key: 'subtextTypography', label: 'Sub-text Typography', type: 'typography' },
       { key: 'primaryCtaText', label: 'Primary Button', type: 'text', placeholder: 'Get Started' },
       { key: 'primaryCtaLink', label: 'Primary Link', type: 'url', placeholder: '/contact' },
       ...getCtaFields('primaryCta', 'Primary Button'),
@@ -118,6 +125,9 @@ const SECTION_TYPES: SectionType[] = [
     description: 'A 3-column grid highlighting key features or benefits',
     fields: [
       { key: 'heading', label: 'Section Heading', type: 'text', placeholder: 'Why Choose Us?' },
+      { key: 'headingTypography', label: 'Section Heading Typography', type: 'typography' },
+      { key: 'featureTitleTypography', label: 'Feature Titles Typography', type: 'typography' },
+      { key: 'featureDescTypography', label: 'Feature Descriptions Typography', type: 'typography' },
       { key: 'feature1Title', label: 'Feature 1 Title', type: 'text', placeholder: '' },
       { key: 'feature1Desc', label: 'Feature 1 Desc', type: 'textarea', placeholder: '' },
       { key: 'feature2Title', label: 'Feature 2 Title', type: 'text', placeholder: '' },
@@ -131,8 +141,10 @@ const SECTION_TYPES: SectionType[] = [
     description: 'A side-by-side layout with an image and text block',
     fields: [
       { key: 'heading', label: 'Heading', type: 'text', placeholder: '' },
+      { key: 'headingTypography', label: 'Heading Typography', type: 'typography' },
       { key: 'body', label: 'Text Content', type: 'textarea', placeholder: '' },
-      { key: 'imageUrl', label: 'Image URL', type: 'url', placeholder: 'https://...' },
+      { key: 'bodyTypography', label: 'Text Typography', type: 'typography' },
+      { key: 'imageUrl', label: 'Image', type: 'image', placeholder: 'https://...' },
       { key: 'imageAlt', label: 'Image Alt Text', type: 'text', placeholder: 'Description for accessibility' },
       { key: 'imagePosition', label: 'Image Position', type: 'text', placeholder: 'left or right (defaults to right)' },
     ],
@@ -142,6 +154,7 @@ const SECTION_TYPES: SectionType[] = [
     description: 'Frequently Asked Questions accordion',
     fields: [
       { key: 'heading', label: 'Section Heading', type: 'text', placeholder: 'Frequently Asked Questions' },
+      { key: 'headingTypography', label: 'Heading Typography', type: 'typography' },
       { key: 'faqs', label: 'FAQs', type: 'faq_array' },
     ],
   },
@@ -177,14 +190,16 @@ const SECTION_TYPES: SectionType[] = [
     description: 'Modern Product hero with pill text, dual buttons, and dynamic image',
     fields: [
       { key: 'pillText', label: 'Pill Text', type: 'text', placeholder: 'Next-Gen Product Platform' },
+      { key: 'pillTypography', label: 'Pill Typography', type: 'typography' },
       { key: 'headline', label: 'Headline', type: 'textarea', placeholder: 'Empower Your Business With Smarter Financial Tools' },
+      { key: 'headlineTypography', label: 'Headline Typography', type: 'typography' },
       { key: 'primaryCtaText', label: 'Primary CTA Text', type: 'text', placeholder: 'Start Free Trial' },
       { key: 'primaryCtaLink', label: 'Primary CTA Link', type: 'text', placeholder: '#' },
       ...getCtaFields('primaryCta', 'Primary Button'),
       { key: 'secondaryCtaText', label: 'Secondary CTA Text', type: 'text', placeholder: 'Watch Demo' },
       { key: 'secondaryCtaLink', label: 'Secondary CTA Link', type: 'text', placeholder: '#' },
       ...getCtaFields('secondaryCta', 'Secondary Button'),
-      { key: 'heroImage', label: 'Main Composition Image URL', type: 'url', placeholder: 'https://...' },
+      { key: 'heroImage', label: 'Main Composition Image', type: 'image', placeholder: 'https://...' },
       { key: 'bgGradient', label: 'Background Gradient', type: 'text', placeholder: 'linear-gradient(...)' },
     ],
   },
@@ -193,8 +208,10 @@ const SECTION_TYPES: SectionType[] = [
     description: 'Left sticky graphic with right scrolling feature list',
     fields: [
       { key: 'heading', label: 'Main Heading', type: 'text', placeholder: 'We Provide Secure Payment Solutions' },
+      { key: 'headingTypography', label: 'Main Heading Typography', type: 'typography' },
       { key: 'pillText', label: 'Top Pill Text', type: 'text', placeholder: 'About Us' },
-      { key: 'image', label: 'Left Side Image URL', type: 'url', placeholder: 'https://...' },
+      { key: 'pillTypography', label: 'Pill Typography', type: 'typography' },
+      { key: 'image', label: 'Left Side Image', type: 'image', placeholder: 'https://...' },
       { key: 'features', label: 'Features (JSON: [{title, desc}])', type: 'textarea', placeholder: '[{"title":"Seamless Integration", "desc":"Connect effortlessly..."}]' },
     ],
   },
@@ -203,7 +220,9 @@ const SECTION_TYPES: SectionType[] = [
     description: 'Bento box style grid for highlighting features',
     fields: [
       { key: 'pillText', label: 'Top Pill Text', type: 'text', placeholder: 'Built for Modern Finance' },
+      { key: 'pillTypography', label: 'Pill Typography', type: 'typography' },
       { key: 'heading', label: 'Main Heading', type: 'text', placeholder: 'Accelerate Your Financial Operations' },
+      { key: 'headingTypography', label: 'Main Heading Typography', type: 'typography' },
       { key: 'cards', label: 'Cards (JSON: [{title, desc, image, colSpan}])', type: 'textarea', placeholder: '[{"title":"Real-Time Cash Flow", "desc":"...", "image":"...", "colSpan": 1}]' },
     ],
   },
@@ -212,8 +231,11 @@ const SECTION_TYPES: SectionType[] = [
     description: 'Arc layout showcasing integration logos',
     fields: [
       { key: 'pillText', label: 'Pill Text', type: 'text', placeholder: 'Plug & Play Finance' },
+      { key: 'pillTypography', label: 'Pill Typography', type: 'typography' },
       { key: 'heading', label: 'Main Heading', type: 'text', placeholder: 'Connect What You Already Use' },
+      { key: 'headingTypography', label: 'Main Heading Typography', type: 'typography' },
       { key: 'subtext', label: 'Sub Text', type: 'textarea', placeholder: 'Plug BrightHub into your financial stack...' },
+      { key: 'subtextTypography', label: 'Subtext Typography', type: 'typography' },
       { key: 'ctaText', label: 'CTA Text', type: 'text', placeholder: 'View All Integrations' },
       { key: 'ctaLink', label: 'CTA Link', type: 'text', placeholder: '#' },
       ...getCtaFields('cta', 'CTA Button'),
@@ -225,7 +247,9 @@ const SECTION_TYPES: SectionType[] = [
     description: '3-tier pricing structure',
     fields: [
       { key: 'pillText', label: 'Pill Text', type: 'text', placeholder: 'Plans Made Simple' },
+      { key: 'pillTypography', label: 'Pill Typography', type: 'typography' },
       { key: 'heading', label: 'Main Heading', type: 'text', placeholder: 'Connect What You Already Use' },
+      { key: 'headingTypography', label: 'Main Heading Typography', type: 'typography' },
       {
         key: 'pricingApiEndpoint',
         label: 'Pricing API Endpoint',
@@ -288,7 +312,9 @@ const SECTION_TYPES: SectionType[] = [
     description: 'Animated vertical step-by-step process',
     fields: [
       { key: 'pillText', label: 'Pill Text', type: 'text', placeholder: 'How it Works' },
+      { key: 'pillTypography', label: 'Pill Typography', type: 'typography' },
       { key: 'heading', label: 'Heading', type: 'text', placeholder: 'Simple Setup Process' },
+      { key: 'headingTypography', label: 'Heading Typography', type: 'typography' },
       { key: 'steps', label: 'Steps (JSON array)', type: 'textarea', placeholder: '[\n  { "title": "Step 1", "desc": "Description 1" },\n  { "title": "Step 2", "desc": "Description 2" }\n]' },
     ],
   },
@@ -297,7 +323,9 @@ const SECTION_TYPES: SectionType[] = [
     description: 'Interactive expanding accordion for frequently asked questions',
     fields: [
       { key: 'pillText', label: 'Pill Text', type: 'text', placeholder: 'FAQs' },
+      { key: 'pillTypography', label: 'Pill Typography', type: 'typography' },
       { key: 'heading', label: 'Heading', type: 'text', placeholder: 'Got Questions?' },
+      { key: 'headingTypography', label: 'Heading Typography', type: 'typography' },
       { key: 'faqs', label: 'Q&A (JSON array)', type: 'textarea', placeholder: '[\n  { "question": "Question 1?", "answer": "Answer 1" },\n  { "question": "Question 2?", "answer": "Answer 2" }\n]' },
     ],
   },
@@ -306,7 +334,9 @@ const SECTION_TYPES: SectionType[] = [
     description: 'Animated marquee of customer testimonials',
     fields: [
       { key: 'pillText', label: 'Pill Text', type: 'text', placeholder: 'Testimonials' },
+      { key: 'pillTypography', label: 'Pill Typography', type: 'typography' },
       { key: 'heading', label: 'Heading', type: 'text', placeholder: 'Loved by Thousands' },
+      { key: 'headingTypography', label: 'Heading Typography', type: 'typography' },
       { key: 'reviews', label: 'Select Testimonials', type: 'multi-select' },
     ],
   },
@@ -315,15 +345,19 @@ const SECTION_TYPES: SectionType[] = [
     description: 'Home page main hero section',
     fields: [
       { key: 'pillText', label: 'Pill Text', type: 'text' },
+      { key: 'pillTypography', label: 'Pill Typography', type: 'typography' },
       { key: 'headline', label: 'Headline', type: 'text' },
+      { key: 'headlineTypography', label: 'Headline Typography', type: 'typography' },
       { key: 'subheadline', label: 'Subheadline', type: 'text' },
+      { key: 'subheadlineTypography', label: 'Subheadline Typography', type: 'typography' },
       { key: 'ctaText', label: 'CTA Text', type: 'text' },
       { key: 'ctaLink', label: 'CTA Link', type: 'text' },
       ...getCtaFields('cta', 'Primary CTA'),
       { key: 'secondaryCtaText', label: 'Secondary CTA Text', type: 'text' },
       { key: 'secondaryCtaLink', label: 'Secondary CTA Link', type: 'text' },
       ...getCtaFields('secondaryCta', 'Secondary CTA'),
-      { key: 'imageUrl', label: 'Image URL', type: 'text' },
+      { key: 'imageUrl', label: 'Single Override Image (hides carousel)', type: 'image' },
+      { key: 'carouselImages', label: 'Carousel Images (up to 20, grouped into slides of 10)', type: 'image_list' },
     ],
   },
   {
@@ -338,7 +372,9 @@ const SECTION_TYPES: SectionType[] = [
     description: 'Home page about section',
     fields: [
       { key: 'heading', label: 'Heading', type: 'text' },
+      { key: 'headingTypography', label: 'Heading Typography', type: 'typography' },
       { key: 'description', label: 'Description', type: 'textarea' },
+      { key: 'descriptionTypography', label: 'Description Typography', type: 'typography' },
       { key: 'stats', label: 'Stats (JSON)', type: 'textarea', placeholder: '[]' },
       { key: 'ctaText', label: 'CTA Text', type: 'text' },
       { key: 'ctaLink', label: 'CTA Link', type: 'text' },
@@ -357,6 +393,7 @@ const SECTION_TYPES: SectionType[] = [
     description: 'Home page animated infrastructure marquee',
     fields: [
       { key: 'heading', label: 'Heading', type: 'text' },
+      { key: 'headingTypography', label: 'Heading Typography', type: 'typography' },
       { key: 'items', label: 'Items (JSON)', type: 'textarea', placeholder: '["Item 1", "Item 2"]' },
     ],
   },
@@ -372,6 +409,7 @@ const SECTION_TYPES: SectionType[] = [
     description: 'Home page process steps',
     fields: [
       { key: 'heading', label: 'Heading', type: 'text' },
+      { key: 'headingTypography', label: 'Heading Typography', type: 'typography' },
       { key: 'steps', label: 'Steps (JSON)', type: 'textarea', placeholder: '[]' },
     ],
   },
@@ -380,6 +418,7 @@ const SECTION_TYPES: SectionType[] = [
     description: 'Home page features grid',
     fields: [
       { key: 'heading', label: 'Heading', type: 'text' },
+      { key: 'headingTypography', label: 'Heading Typography', type: 'typography' },
       { key: 'features', label: 'Features (JSON)', type: 'textarea', placeholder: '[]' },
     ],
   },
@@ -402,8 +441,11 @@ const SECTION_TYPES: SectionType[] = [
     description: 'Dynamic hero with orbiting icons and subscribe form',
     fields: [
       { key: 'pillText', label: 'Pill Text', type: 'text', placeholder: "Hey there! We're Nubi" },
+      { key: 'pillTypography', label: 'Pill Typography', type: 'typography' },
       { key: 'headline', label: 'Headline', type: 'textarea', placeholder: 'Amplifying your online presence' },
+      { key: 'headlineTypography', label: 'Headline Typography', type: 'typography' },
       { key: 'subtext', label: 'Subtext', type: 'textarea', placeholder: 'Amet convallis...' },
+      { key: 'subtextTypography', label: 'Subtext Typography', type: 'typography' },
       { key: 'buttonText', label: 'Button Text', type: 'text', placeholder: 'Subscribe' },
       { key: 'orbitIcons', label: 'Orbit Icons (JSON Array)', type: 'textarea', placeholder: '["Youtube", "Facebook", "Instagram", "Linkedin", "Twitter"]' },
       { key: 'accentColor', label: 'Accent Color', type: 'text', placeholder: '#ED1C24' },
@@ -414,7 +456,9 @@ const SECTION_TYPES: SectionType[] = [
     description: 'Horizontal scrolling testimonial cards with quote icons',
     fields: [
       { key: 'pillText', label: 'Pill Text', type: 'text', placeholder: 'Testimonials' },
+      { key: 'pillTypography', label: 'Pill Typography', type: 'typography' },
       { key: 'heading', label: 'Heading', type: 'text', placeholder: "What they\\'re saying.." },
+      { key: 'headingTypography', label: 'Heading Typography', type: 'typography' },
       { key: 'testimonials', label: 'Testimonials (JSON Array)', type: 'textarea', placeholder: '[{"name":"Drew", "role":"CEO", "text":"Great!", "avatar":""}]' },
       { key: 'accentColor', label: 'Accent Color', type: 'text', placeholder: '#ED1C24' },
     ],
@@ -424,7 +468,9 @@ const SECTION_TYPES: SectionType[] = [
     description: 'Light themed 3-column grid for services and features',
     fields: [
       { key: 'pillText', label: 'Pill Text', type: 'text', placeholder: 'Our Services' },
+      { key: 'pillTypography', label: 'Pill Typography', type: 'typography' },
       { key: 'heading', label: 'Heading', type: 'textarea', placeholder: 'We offer a wide range...' },
+      { key: 'headingTypography', label: 'Heading Typography', type: 'typography' },
       { key: 'services', label: 'Services (JSON Array)', type: 'textarea', placeholder: '[{"title":"SEO", "desc":"...", "icon":"Search"}]' },
       { key: 'accentColor', label: 'Accent Color', type: 'text', placeholder: '#ED1C24' },
     ],
@@ -434,11 +480,16 @@ const SECTION_TYPES: SectionType[] = [
     description: 'Team avatars, huge stats, and a massive colored CTA box',
     fields: [
       { key: 'teamPill', label: 'Team Pill Text', type: 'text', placeholder: 'Who we are?' },
+      { key: 'teamPillTypography', label: 'Team Pill Typography', type: 'typography' },
       { key: 'teamHeading', label: 'Team Heading', type: 'textarea', placeholder: 'Our team consists of experts...' },
+      { key: 'teamHeadingTypography', label: 'Team Heading Typography', type: 'typography' },
       { key: 'teamSubtext', label: 'Team Subtext', type: 'textarea', placeholder: 'Nam sapien feugiat...' },
+      { key: 'teamSubtextTypography', label: 'Team Subtext Typography', type: 'typography' },
       { key: 'stats', label: 'Stats (JSON Array)', type: 'textarea', placeholder: '[{"number":"10+", "label":"Years"}]' },
       { key: 'ctaHeading', label: 'CTA Heading', type: 'textarea', placeholder: 'Contact us today...' },
+      { key: 'ctaHeadingTypography', label: 'CTA Heading Typography', type: 'typography' },
       { key: 'ctaSubtext', label: 'CTA Subtext', type: 'textarea', placeholder: 'Amet convallis...' },
+      { key: 'ctaSubtextTypography', label: 'CTA Subtext Typography', type: 'typography' },
       { key: 'ctaButtonText', label: 'CTA Button Text', type: 'text', placeholder: 'Contact us' },
       { key: 'ctaLink', label: 'CTA Link', type: 'text', placeholder: '/contact' },
       ...getCtaFields('cta', 'CTA Button'),
@@ -450,7 +501,9 @@ const SECTION_TYPES: SectionType[] = [
     description: 'The massive glowing CTA used at the bottom of pages.',
     fields: [
       { key: 'heading', label: 'Heading', type: 'text', placeholder: 'READY TO BUILD THE FUTURE?' },
+      { key: 'headingTypography', label: 'Heading Typography', type: 'typography' },
       { key: 'subheading', label: 'Subheading', type: 'textarea', placeholder: 'Transform your business...' },
+      { key: 'subheadingTypography', label: 'Subheading Typography', type: 'typography' },
       { key: 'primaryBtnText', label: 'Primary Button Text', type: 'text', placeholder: 'Start Consultation' },
       { key: 'primaryBtnLink', label: 'Primary Button Link', type: 'text', placeholder: '/contact' },
       ...getCtaFields('primaryBtn', 'Primary Button'),
@@ -534,7 +587,60 @@ function SectionCard({ section, index, total, onMoveUp, onMoveDown, onDelete, on
             .map(field => (
               <div key={field.key}>
               <label style={{ display: 'block', marginBottom: '0.4rem', fontSize: '0.8rem', fontWeight: 600, color: '#888' }}>{field.label}</label>
-              {field.type === 'textarea' ? (
+              {field.type === 'image' ? (
+                <ImageUploader
+                  value={fields[field.key] || ''}
+                  onChange={(url) => handleChange(field.key, url)}
+                />
+              ) : field.type === 'image_list' ? (() => {
+                let imgs: string[] = [];
+                try { imgs = JSON.parse(fields[field.key] || '[]'); } catch { }
+                const MAX = 20;
+                return (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                    {/* Preview grid */}
+                    {imgs.length > 0 && (
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(90px, 1fr))', gap: '0.5rem' }}>
+                        {imgs.map((src, idx) => (
+                          <div key={idx} style={{ position: 'relative', borderRadius: '8px', overflow: 'hidden', aspectRatio: '1/1', background: '#111', border: '1px solid #2a2a2a' }}>
+                            <img src={src} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                            <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0)', transition: 'background 0.2s' }} />
+                            <button
+                              type="button"
+                              onClick={() => { const n = imgs.filter((_, i) => i !== idx); handleChange(field.key, JSON.stringify(n)); }}
+                              style={{ position: 'absolute', top: '4px', right: '4px', background: 'rgba(0,0,0,0.75)', border: 'none', color: '#fff', borderRadius: '50%', width: '20px', height: '20px', cursor: 'pointer', fontSize: '0.6rem', display: 'flex', alignItems: 'center', justifyContent: 'center', lineHeight: 1 }}
+                            >✕</button>
+                            <div style={{ position: 'absolute', bottom: '4px', left: '4px', background: 'rgba(0,0,0,0.6)', color: '#aaa', fontSize: '0.6rem', padding: '1px 4px', borderRadius: '3px' }}>{idx + 1}</div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                    {/* Add more */}
+                    {imgs.length < MAX && (
+                      <ImageUploader
+                        label={imgs.length === 0 ? 'Add carousel images' : `Add more (${imgs.length}/${MAX})`}
+                        value=""
+                        onChange={(url) => {
+                          if (!url) return;
+                          const n = [...imgs, url];
+                          handleChange(field.key, JSON.stringify(n));
+                        }}
+                        showUrlInput={false}
+                      />
+                    )}
+                    {imgs.length >= MAX && (
+                      <div style={{ color: '#888', fontSize: '0.8rem' }}>Maximum {MAX} images reached.</div>
+                    )}
+                    {imgs.length > 0 && (
+                      <button
+                        type="button"
+                        onClick={() => { if (confirm('Clear all carousel images?')) handleChange(field.key, '[]'); }}
+                        style={{ alignSelf: 'flex-start', background: 'transparent', border: '1px solid #2a1515', color: '#ED1C24', borderRadius: '6px', padding: '4px 10px', fontSize: '0.75rem', cursor: 'pointer' }}
+                      >Clear All</button>
+                    )}
+                  </div>
+                );
+              })() : field.type === 'textarea' ? (
                 <textarea value={fields[field.key] || ''} onChange={e => handleChange(field.key, e.target.value)} placeholder={field.placeholder} rows={3} style={{ ...fieldInput, resize: 'vertical', lineHeight: 1.5 }} />
               ) : field.type === 'faq_array' ? (
                 <div style={{ padding: '1rem', background: '#111', borderRadius: '8px', border: '1px dashed #333' }}>
@@ -590,7 +696,56 @@ function SectionCard({ section, index, total, onMoveUp, onMoveDown, onDelete, on
                     })
                   )}
                 </div>
-              ) : (
+              ) : field.type === 'typography' ? (() => {
+                let typoSettings: any = {};
+                try { typoSettings = JSON.parse(fields[field.key] || '{}'); } catch { }
+                const updateTypo = (key: string, val: string) => {
+                  handleChange(field.key, JSON.stringify({ ...typoSettings, [key]: val }));
+                };
+                return (
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))', gap: '0.75rem', padding: '1rem', background: '#111', borderRadius: '8px', border: '1px solid #333' }}>
+                    <div>
+                      <label style={{ display: 'block', marginBottom: '0.25rem', fontSize: '0.7rem', color: '#888' }}>Tag</label>
+                      <select value={typoSettings.tag || ''} onChange={e => updateTypo('tag', e.target.value)} style={{ ...fieldInput, padding: '0.5rem', fontSize: '0.8rem' }}>
+                        <option value="">Default</option>
+                        <option value="h1">H1</option>
+                        <option value="h2">H2</option>
+                        <option value="h3">H3</option>
+                        <option value="h4">H4</option>
+                        <option value="h5">H5</option>
+                        <option value="h6">H6</option>
+                        <option value="p">P (Paragraph)</option>
+                        <option value="span">Span</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label style={{ display: 'block', marginBottom: '0.25rem', fontSize: '0.7rem', color: '#888' }}>Size</label>
+                      <input type="text" placeholder="e.g. 2rem or clamp(...)" value={typoSettings.fontSize || ''} onChange={e => updateTypo('fontSize', e.target.value)} style={{ ...fieldInput, padding: '0.5rem', fontSize: '0.8rem' }} />
+                    </div>
+                    <div>
+                      <label style={{ display: 'block', marginBottom: '0.25rem', fontSize: '0.7rem', color: '#888' }}>Weight</label>
+                      <select value={typoSettings.fontWeight || ''} onChange={e => updateTypo('fontWeight', e.target.value)} style={{ ...fieldInput, padding: '0.5rem', fontSize: '0.8rem' }}>
+                        <option value="">Default</option>
+                        <option value="300">Light (300)</option>
+                        <option value="400">Normal (400)</option>
+                        <option value="500">Medium (500)</option>
+                        <option value="600">Semibold (600)</option>
+                        <option value="700">Bold (700)</option>
+                        <option value="800">Extra Bold (800)</option>
+                        <option value="900">Black (900)</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label style={{ display: 'block', marginBottom: '0.25rem', fontSize: '0.7rem', color: '#888' }}>Style</label>
+                      <select value={typoSettings.fontStyle || ''} onChange={e => updateTypo('fontStyle', e.target.value)} style={{ ...fieldInput, padding: '0.5rem', fontSize: '0.8rem' }}>
+                        <option value="">Default</option>
+                        <option value="normal">Normal</option>
+                        <option value="italic">Italic</option>
+                      </select>
+                    </div>
+                  </div>
+                );
+              })() : (
                 <input type="text" value={fields[field.key] || ''} onChange={e => handleChange(field.key, e.target.value)} placeholder={field.placeholder} style={fieldInput} />
               )}
             </div>

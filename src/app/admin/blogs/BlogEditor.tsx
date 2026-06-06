@@ -4,6 +4,7 @@ import dynamic from 'next/dynamic';
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { createBlogPost, deleteBlogPost, updateBlogPost } from '@/app/actions/cms';
+import ImageUploader from '@/components/ImageUploader';
 
 // Lazy-load the markdown editor to avoid SSR issues
 const MDEditor = dynamic(() => import('@uiw/react-md-editor'), { ssr: false });
@@ -155,9 +156,11 @@ export default function BlogEditor({ initialBlogs }: { initialBlogs: Blog[] }) {
             </div>
 
             <div>
-              <label style={{ display: 'block', marginBottom: '0.3rem', fontSize: '0.75rem', fontWeight: 600, color: '#666', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Cover Image URL *</label>
-              <input style={inp} value={image} onChange={e => setImage(e.target.value)} placeholder="https://images.unsplash.com/..." />
-              {image && <img src={image} alt="preview" style={{ marginTop: '0.5rem', height: '120px', width: '100%', objectFit: 'cover', borderRadius: '6px' }} />}
+              <ImageUploader
+                label="Cover Image *"
+                value={image}
+                onChange={setImage}
+              />
             </div>
 
             <div>
@@ -183,8 +186,12 @@ export default function BlogEditor({ initialBlogs }: { initialBlogs: Blog[] }) {
                   <input style={inp} value={keywords} onChange={e => setKeywords(e.target.value)} placeholder="marketing, tools, etc" />
                 </div>
                 <div>
-                  <label style={{ display: 'block', marginBottom: '0.3rem', fontSize: '0.75rem', fontWeight: 600, color: '#666', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Social Share Image URL</label>
-                  <input style={inp} value={ogImage} onChange={e => setOgImage(e.target.value)} placeholder="https://..." />
+                  <ImageUploader
+                    label="Social Share Image (OG)"
+                    value={ogImage}
+                    onChange={setOgImage}
+                    compact
+                  />
                 </div>
                 <div>
                   <label style={{ display: 'block', marginBottom: '0.3rem', fontSize: '0.75rem', fontWeight: 600, color: '#666', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Schema Markup (JSON-LD)</label>

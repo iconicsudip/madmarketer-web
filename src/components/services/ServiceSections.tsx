@@ -5,6 +5,7 @@ import { motion, useInView } from 'framer-motion';
 import * as LucideIcons from 'lucide-react';
 import Link from 'next/link';
 import CTAButton from '@/components/CTAButton';
+import DynamicText from '@/components/DynamicText';
 
 // Utility for dynamic icons
 const DynamicIcon = ({ name, size = 24, color = "currentColor", className = "" }: any) => {
@@ -71,17 +72,27 @@ export function ServiceHero({ data }: { data: Record<string, string> }) {
       <div style={{ position: 'relative', zIndex: 2, textAlign: 'center', maxWidth: '800px', padding: '0 2rem' }}>
         {data.pillText && (
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(255,255,255,0.05)', padding: '0.5rem 1.2rem', borderRadius: '50px', fontSize: '0.9rem', fontWeight: 600, border: '1px solid rgba(255,255,255,0.1)', marginBottom: '2rem' }}>
-            👋 {data.pillText}
+            👋 <DynamicText content={data.pillText} typography={data.pillTypography} defaultTag="span" />
           </motion.div>
         )}
         
-        <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} style={{ fontFamily: 'var(--font-inter)', fontSize: 'clamp(2.5rem, 6vw, 4.5rem)', fontWeight: 800, letterSpacing: '-0.03em', lineHeight: 1.1, marginBottom: '1.5rem' }}>
-          {data.headline || 'Amplifying your online presence'}
-        </motion.h1>
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
+          <DynamicText 
+            content={data.headline || 'Amplifying your online presence'} 
+            typography={data.headlineTypography} 
+            defaultTag="h1" 
+            defaultStyle={{ fontFamily: 'var(--font-inter)', fontSize: 'clamp(2.5rem, 6vw, 4.5rem)', fontWeight: 800, letterSpacing: '-0.03em', lineHeight: 1.1, marginBottom: '1.5rem' }} 
+          />
+        </motion.div>
         
-        <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} style={{ color: 'rgba(255,255,255,0.6)', fontSize: '1.2rem', maxWidth: '600px', margin: '0 auto 3rem', lineHeight: 1.6 }}>
-          {data.subtext || 'Amet convallis tempus lobortis dui. Nec dapibus pharetra ipsum commodo tristique viverra.'}
-        </motion.p>
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
+          <DynamicText 
+            content={data.subtext || 'Amet convallis tempus lobortis dui. Nec dapibus pharetra ipsum commodo tristique viverra.'} 
+            typography={data.subtextTypography} 
+            defaultTag="p" 
+            defaultStyle={{ color: 'rgba(255,255,255,0.6)', fontSize: '1.2rem', maxWidth: '600px', margin: '0 auto 3rem', lineHeight: 1.6 }} 
+          />
+        </motion.div>
 
         <motion.form initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap', maxWidth: '500px', margin: '0 auto' }}>
           <input 
@@ -119,10 +130,15 @@ export function ServiceTestimonials({ data }: { data: Record<string, string> }) 
       <div className="container" style={{ textAlign: 'center', marginBottom: '4rem', position: 'relative', zIndex: 1 }}>
         {data.pillText && (
           <div style={{ display: 'inline-block', border: `1px solid ${accentColor}40`, background: `${accentColor}15`, color: accentColor, padding: '0.4rem 1.2rem', borderRadius: '50px', fontSize: '0.85rem', fontWeight: 600, marginBottom: '1.5rem', boxShadow: `0 0 20px ${accentColor}20` }}>
-            {data.pillText}
+            <DynamicText content={data.pillText} typography={data.pillTypography} defaultTag="span" />
           </div>
         )}
-        <h2 style={{ fontSize: '3rem', fontWeight: 800, letterSpacing: '-0.03em' }}>{data.heading || "What they're saying.."}</h2>
+        <DynamicText 
+          content={data.heading || "What they're saying.."} 
+          typography={data.headingTypography} 
+          defaultTag="h2" 
+          defaultStyle={{ fontSize: '3rem', fontWeight: 800, letterSpacing: '-0.03em' }} 
+        />
       </div>
 
       <style>{`
@@ -209,12 +225,15 @@ export function ServiceGrid({ data }: { data: Record<string, string> }) {
       <div className="container" style={{ textAlign: 'center', marginBottom: '5rem', position: 'relative', zIndex: 1 }}>
         {data.pillText && (
           <div style={{ display: 'inline-block', border: `1px solid ${accentColor}40`, background: `${accentColor}15`, color: accentColor, padding: '0.4rem 1.2rem', borderRadius: '50px', fontSize: '0.9rem', fontWeight: 600, marginBottom: '1.5rem', boxShadow: '0 4px 10px rgba(0,0,0,0.2)' }}>
-            {data.pillText}
+            <DynamicText content={data.pillText} typography={data.pillTypography} defaultTag="span" />
           </div>
         )}
-        <h2 style={{ fontSize: 'clamp(2rem, 4vw, 3.5rem)', fontWeight: 800, letterSpacing: '-0.03em', maxWidth: '800px', margin: '0 auto', color: '#fff' }}>
-          {data.heading || 'We offer a wide range of services'}
-        </h2>
+        <DynamicText 
+          content={data.heading || 'We offer a wide range of services'} 
+          typography={data.headingTypography} 
+          defaultTag="h2" 
+          defaultStyle={{ fontSize: 'clamp(2rem, 4vw, 3.5rem)', fontWeight: 800, letterSpacing: '-0.03em', maxWidth: '800px', margin: '0 auto', color: '#fff' }} 
+        />
       </div>
 
       <style>{`
@@ -256,12 +275,15 @@ export function ServiceTeamContact({ data }: { data: Record<string, string> }) {
       <div className="container" style={{ textAlign: 'center', paddingBottom: '6rem', position: 'relative', zIndex: 1 }}>
         {data.teamPill && (
           <div style={{ color: accentColor, fontWeight: 700, textTransform: 'uppercase', fontSize: '0.85rem', letterSpacing: '0.1em', marginBottom: '1rem' }}>
-            {data.teamPill}
+            <DynamicText content={data.teamPill} typography={data.teamPillTypography} defaultTag="span" />
           </div>
         )}
-        <h2 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 800, letterSpacing: '-0.03em', maxWidth: '800px', margin: '0 auto 2rem', color: '#fff' }}>
-          {data.teamHeading || 'Our team consists of experts passionate about helping you succeed.'}
-        </h2>
+        <DynamicText 
+          content={data.teamHeading || 'Our team consists of experts passionate about helping you succeed.'} 
+          typography={data.teamHeadingTypography} 
+          defaultTag="h2" 
+          defaultStyle={{ fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 800, letterSpacing: '-0.03em', maxWidth: '800px', margin: '0 auto 2rem', color: '#fff' }} 
+        />
         
         {/* Avatars & Subtext */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '2rem', flexWrap: 'wrap', maxWidth: '800px', margin: '0 auto' }}>
@@ -295,12 +317,18 @@ export function ServiceTeamContact({ data }: { data: Record<string, string> }) {
           <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '600px', height: '600px', background: accentColor, borderRadius: '50%', filter: 'blur(250px)', opacity: 0.25, pointerEvents: 'none', zIndex: 0 }} />
           
           <div style={{ position: 'relative', zIndex: 1 }}>
-            <h2 style={{ fontSize: 'clamp(2.5rem, 5vw, 4rem)', fontWeight: 800, letterSpacing: '-0.03em', maxWidth: '800px', margin: '0 auto 1.5rem' }}>
-              {data.ctaHeading || 'Contact us today for a free consultation'}
-            </h2>
-            <p style={{ fontSize: '1.2rem', color: '#aaa', maxWidth: '600px', margin: '0 auto 3rem', lineHeight: 1.6 }}>
-              {data.ctaSubtext || 'Take the first step towards building your ultimate operational infrastructure.'}
-            </p>
+            <DynamicText 
+              content={data.ctaHeading || 'Contact us today for a free consultation'} 
+              typography={data.ctaHeadingTypography} 
+              defaultTag="h2" 
+              defaultStyle={{ fontSize: 'clamp(2.5rem, 5vw, 4rem)', fontWeight: 800, letterSpacing: '-0.03em', maxWidth: '800px', margin: '0 auto 1.5rem' }} 
+            />
+            <DynamicText 
+              content={data.ctaSubtext || 'Take the first step towards building your ultimate operational infrastructure.'} 
+              typography={data.ctaSubtextTypography} 
+              defaultTag="p" 
+              defaultStyle={{ fontSize: '1.2rem', color: '#aaa', maxWidth: '600px', margin: '0 auto 3rem', lineHeight: 1.6 }} 
+            />
             <CTAButton
               href={data.ctaLink || '/contact'}
               style={{ display: 'inline-block', background: 'var(--primary-red)', color: '#fff', padding: '16px 44px', borderRadius: '50px', fontWeight: 700, fontSize: '1.1rem', textDecoration: 'none', boxShadow: '0 15px 30px rgba(237, 28, 36, 0.4)', transition: 'transform 0.2s, box-shadow 0.2s' }}

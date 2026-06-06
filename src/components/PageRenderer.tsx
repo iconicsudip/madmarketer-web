@@ -2,6 +2,7 @@ import { prisma } from '@/lib/prisma';
 import FAQAccordion from '@/components/services/FAQAccordion';
 import Link from 'next/link';
 import CTAButton from '@/components/CTAButton';
+import DynamicText from '@/components/DynamicText';
 
 // Home components
 import Hero from '@/components/home/Hero';
@@ -26,14 +27,20 @@ function HeroSection({ data }: { data: Record<string, string> }) {
     <div style={{ paddingTop: '180px', paddingBottom: '120px', color: '#fff' }}>
       <div className="container" style={{ textAlign: 'center' }}>
         {data.headline && (
-          <h1 style={{ fontFamily: 'var(--font-inter)', fontSize: 'clamp(3rem, 6vw, 5.5rem)', fontWeight: 700, marginBottom: '1.5rem', letterSpacing: '-0.03em', lineHeight: 1.1 }}>
-            {data.headline}
-          </h1>
+          <DynamicText 
+            content={data.headline} 
+            typography={data.headlineTypography} 
+            defaultTag="h1" 
+            defaultStyle={{ fontFamily: 'var(--font-inter)', fontSize: 'clamp(3rem, 6vw, 5.5rem)', fontWeight: 700, marginBottom: '1.5rem', letterSpacing: '-0.03em', lineHeight: 1.1 }} 
+          />
         )}
         {data.subheadline && (
-          <p style={{ fontFamily: 'var(--font-inter)', fontSize: '1.2rem', color: 'rgba(255,255,255,0.55)', maxWidth: '620px', margin: '0 auto 3rem', lineHeight: 1.7 }}>
-            {data.subheadline}
-          </p>
+          <DynamicText 
+            content={data.subheadline} 
+            typography={data.subheadlineTypography} 
+            defaultTag="p" 
+            defaultStyle={{ fontFamily: 'var(--font-inter)', fontSize: '1.2rem', color: 'rgba(255,255,255,0.55)', maxWidth: '620px', margin: '0 auto 3rem', lineHeight: 1.7 }} 
+          />
         )}
         {data.ctaText && data.ctaLink && (
           <CTAButton
@@ -56,8 +63,22 @@ function TextSection({ data }: { data: Record<string, string> }) {
   return (
     <section style={{ padding: '6rem 0', background: 'var(--dark-bg)' }}>
       <div className="container" style={{ maxWidth: '1024px' }}>
-        {data.heading && <h2 style={{ fontSize: '2.5rem', fontWeight: 700, marginBottom: '2rem' }}>{data.heading}</h2>}
-        {data.body && <p style={{ fontSize: '1.1rem', lineHeight: 1.8, color: 'rgba(255,255,255,0.7)', whiteSpace: 'pre-wrap' }}>{data.body}</p>}
+        {data.heading && (
+          <DynamicText 
+            content={data.heading} 
+            typography={data.headingTypography} 
+            defaultTag="h2" 
+            defaultStyle={{ fontSize: '2.5rem', fontWeight: 700, marginBottom: '2rem' }} 
+          />
+        )}
+        {data.body && (
+          <DynamicText 
+            content={data.body} 
+            typography={data.bodyTypography} 
+            defaultTag="p" 
+            defaultStyle={{ fontSize: '1.1rem', lineHeight: 1.8, color: 'rgba(255,255,255,0.7)', whiteSpace: 'pre-wrap' }} 
+          />
+        )}
       </div>
     </section>
   );
@@ -67,8 +88,22 @@ function CtaSection({ data }: { data: Record<string, string> }) {
   return (
     <section style={{ padding: '8rem 0', background: 'var(--dark-bg)' }}>
       <div className="container" style={{ textAlign: 'center' }}>
-        {data.heading && <h2 style={{ fontSize: '3.5rem', fontWeight: 700, marginBottom: '1.5rem' }}>{data.heading}</h2>}
-        {data.subtext && <p style={{ fontSize: '1.2rem', color: 'rgba(255,255,255,0.6)', marginBottom: '3rem' }}>{data.subtext}</p>}
+        {data.heading && (
+          <DynamicText 
+            content={data.heading} 
+            typography={data.headingTypography} 
+            defaultTag="h2" 
+            defaultStyle={{ fontSize: '3.5rem', fontWeight: 700, marginBottom: '1.5rem' }} 
+          />
+        )}
+        {data.subtext && (
+          <DynamicText 
+            content={data.subtext} 
+            typography={data.subtextTypography} 
+            defaultTag="p" 
+            defaultStyle={{ fontSize: '1.2rem', color: 'rgba(255,255,255,0.6)', marginBottom: '3rem' }} 
+          />
+        )}
         <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
           {data.primaryCtaText && data.primaryCtaLink && (
             <CTAButton
@@ -110,12 +145,29 @@ function FeaturesSection({ data }: { data: Record<string, string> }) {
   return (
     <section style={{ padding: '6rem 0', background: 'var(--dark-bg)' }}>
       <div className="container">
-        {data.heading && <h2 style={{ fontSize: '2.5rem', fontWeight: 700, textAlign: 'center', marginBottom: '4rem' }}>{data.heading}</h2>}
+        {data.heading && (
+          <DynamicText 
+            content={data.heading} 
+            typography={data.headingTypography} 
+            defaultTag="h2" 
+            defaultStyle={{ fontSize: '2.5rem', fontWeight: 700, textAlign: 'center', marginBottom: '4rem' }} 
+          />
+        )}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
           {features.map((f, i) => (
             <div key={i} style={{ background: 'rgba(255,255,255,0.02)', padding: '2.5rem', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.05)' }}>
-              <h3 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '1rem' }}>{f.title}</h3>
-              <p style={{ color: 'rgba(255,255,255,0.6)', lineHeight: 1.7 }}>{f.desc}</p>
+              <DynamicText 
+                content={f.title} 
+                typography={data.featureTitleTypography} 
+                defaultTag="h3" 
+                defaultStyle={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '1rem' }} 
+              />
+              <DynamicText 
+                content={f.desc} 
+                typography={data.featureDescTypography} 
+                defaultTag="p" 
+                defaultStyle={{ color: 'rgba(255,255,255,0.6)', lineHeight: 1.7 }} 
+              />
             </div>
           ))}
         </div>
@@ -133,8 +185,22 @@ function ImageTextSection({ data }: { data: Record<string, string> }) {
           <img src={data.imageUrl} alt={data.imageAlt || ''} style={{ width: '100%', borderRadius: '24px', objectFit: 'cover', aspectRatio: '1/1' }} />
         )}
         <div>
-          {data.heading && <h2 style={{ fontSize: '2.5rem', fontWeight: 700, marginBottom: '2rem' }}>{data.heading}</h2>}
-          {data.body && <p style={{ fontSize: '1.1rem', lineHeight: 1.8, color: 'rgba(255,255,255,0.7)', whiteSpace: 'pre-wrap' }}>{data.body}</p>}
+          {data.heading && (
+            <DynamicText 
+              content={data.heading} 
+              typography={data.headingTypography} 
+              defaultTag="h2" 
+              defaultStyle={{ fontSize: '2.5rem', fontWeight: 700, marginBottom: '2rem' }} 
+            />
+          )}
+          {data.body && (
+            <DynamicText 
+              content={data.body} 
+              typography={data.bodyTypography} 
+              defaultTag="p" 
+              defaultStyle={{ fontSize: '1.1rem', lineHeight: 1.8, color: 'rgba(255,255,255,0.7)', whiteSpace: 'pre-wrap' }} 
+            />
+          )}
         </div>
         {!isLeft && data.imageUrl && (
           <img src={data.imageUrl} alt={data.imageAlt || ''} style={{ width: '100%', borderRadius: '24px', objectFit: 'cover', aspectRatio: '1/1' }} />
@@ -156,7 +222,16 @@ function FAQSection({ data }: { data: Record<string, string> }) {
   return (
     <section style={{ padding: '4rem 0' }}>
       <div className="container" style={{ maxWidth: '1024px' }}>
-        <FAQAccordion faqs={faqs} title={data.heading || 'Frequently Asked Questions'} />
+        {data.heading && (
+          <DynamicText 
+            content={data.heading} 
+            typography={data.headingTypography} 
+            defaultTag="h2" 
+            defaultStyle={{ fontSize: '2.5rem', fontWeight: 700, textAlign: 'center', marginBottom: '2rem' }} 
+            className="faq-dynamic-heading"
+          />
+        )}
+        <FAQAccordion faqs={faqs} title={data.heading ? "" : 'Frequently Asked Questions'} />
       </div>
     </section>
   );

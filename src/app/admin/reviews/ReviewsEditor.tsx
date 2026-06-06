@@ -3,6 +3,7 @@
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { createTestimonial, updateTestimonial, deleteTestimonial } from '@/app/actions/cms';
+import ImageUploader from '@/components/ImageUploader';
 
 type Testimonial = {
   id: string;
@@ -112,7 +113,12 @@ export default function ReviewsEditor({ initialReviews }: { initialReviews: Test
             <input name="name" placeholder="Client Name *" required style={inputStyle} value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} />
             <input name="role" placeholder="Job Title / Role *" required style={inputStyle} value={formData.role} onChange={e => setFormData({ ...formData, role: e.target.value })} />
             <input name="company" placeholder="Company Name *" required style={inputStyle} value={formData.company} onChange={e => setFormData({ ...formData, company: e.target.value })} />
-            <input name="avatar" placeholder="Avatar Image URL" style={inputStyle} value={formData.avatar} onChange={e => setFormData({ ...formData, avatar: e.target.value })} />
+            <ImageUploader
+              label="Avatar Image"
+              value={formData.avatar}
+              onChange={(url) => setFormData({ ...formData, avatar: url })}
+              compact
+            />
             <input name="logoName" placeholder="Logo icon name (optional)" style={inputStyle} value={formData.logoName} onChange={e => setFormData({ ...formData, logoName: e.target.value })} />
             
             <textarea name="content" placeholder="Review content *" required rows={4} style={{ ...inputStyle, resize: 'vertical', lineHeight: 1.5 }} value={formData.content} onChange={e => setFormData({ ...formData, content: e.target.value })} />

@@ -20,6 +20,12 @@ export async function deleteService(id: string) {
   revalidatePath('/admin/services');
 }
 
+export async function updateService(id: string, data: { title: string; category: string; slug: string; desc: string; image: string; metaTitle?: string; metaDescription?: string; keywords?: string; ogImage?: string; schemaMarkup?: string }) {
+  await prisma.service.update({ where: { id }, data });
+  revalidatePath('/');
+  revalidatePath('/admin/services');
+}
+
 // --- PRODUCTS ---
 export async function getProducts() {
   return await prisma.product.findMany({ orderBy: { createdAt: 'asc' } });
