@@ -169,7 +169,7 @@ export default async function PortfolioAdmin({ searchParams }: { searchParams?: 
             )}
           </div>
           
-          <form action={editingProject ? handleUpdate : handleAdd}>
+          <form key={editingProject?.id || 'new'} action={editingProject ? handleUpdate : handleAdd}>
             <div className="input-group">
               <Type size={18} className="input-icon" />
               <input name="client" defaultValue={editingProject?.client || ''} placeholder="Client Name" required className="admin-input" />

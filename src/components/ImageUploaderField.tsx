@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import ImageUploader from './ImageUploader';
 
 interface Props {
@@ -12,6 +12,11 @@ interface Props {
 
 export default function ImageUploaderField({ name, defaultValue = '', label, compact = false }: Props) {
   const [url, setUrl] = useState(defaultValue);
+
+  useEffect(() => {
+    setUrl(defaultValue);
+  }, [defaultValue]);
+
   return (
     <div style={{ marginBottom: '1.25rem' }}>
       <input type="hidden" name={name} value={url} />

@@ -89,7 +89,7 @@ export default async function EditPageAdmin({ params }: { params: Promise<{ id: 
               <span style={{ fontSize: '1.1rem' }}>⚙️</span>
               <h2 style={{ margin: 0, fontSize: '1rem', fontWeight: 700 }}>Page Settings</h2>
             </div>
-            <form action={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            <form key={page.id} action={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               <input type="hidden" name="pageId" value={page.id} />
               <div>
                 <label style={{ display: 'block', marginBottom: '0.35rem', fontSize: '0.78rem', fontWeight: 600, color: '#777', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Page Title</label>
@@ -168,7 +168,7 @@ export default async function EditPageAdmin({ params }: { params: Promise<{ id: 
           {/* Danger Zone */}
           <div style={{ background: '#0d0d0d', border: '1px solid #2a1a1a', borderRadius: '14px', padding: '1.25rem' }}>
             <h3 style={{ margin: '0 0 0.75rem', fontSize: '0.85rem', fontWeight: 600, color: '#ED1C2480', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Danger Zone</h3>
-            <form action={handleDelete}>
+            <form key={page.id} action={handleDelete}>
               <input type="hidden" name="pageId" value={page.id} />
               <button type="submit"
                 style={{ width: '100%', background: 'transparent', border: '1px solid #3a1a1a', color: '#ED1C24', borderRadius: '8px', padding: '0.6rem', cursor: 'pointer', fontSize: '0.82rem', fontWeight: 600 }}>
