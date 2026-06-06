@@ -782,9 +782,23 @@ function SectionCard({ section, index, total, onMoveUp, onMoveDown, onDelete, on
             <textarea
               value={previewModal.data}
               onChange={(e) => setPreviewModal({ ...previewModal, data: e.target.value })}
+              onBlur={() => {
+                try {
+                  if (!previewModal.data.trim()) return;
+                  const parsed = JSON.parse(previewModal.data);
+                  setPreviewModal({ ...previewModal, data: JSON.stringify(parsed, null, 2) });
+                } catch {}
+              }}
               style={{ width: '100%', minHeight: '350px', background: '#111', border: '1px solid #222', borderRadius: '8px', padding: '1rem', overflowX: 'auto', color: '#4ade80', fontSize: '0.85rem', fontFamily: 'monospace', margin: '0 0 1.5rem', resize: 'vertical' }}
             />
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem' }}>
+              <button type="button" onClick={() => {
+                try {
+                  setPreviewModal({ ...previewModal, data: JSON.stringify(JSON.parse(previewModal.data), null, 2) });
+                } catch {
+                  alert('Invalid JSON! Please fix formatting errors.');
+                }
+              }} style={{ background: 'transparent', border: '1px solid #4ade8055', color: '#4ade80', borderRadius: '6px', padding: '0.6rem 1.2rem', cursor: 'pointer', fontSize: '0.85rem', fontWeight: 600 }}>Format JSON</button>
               <button type="button" onClick={() => setPreviewModal(null)} style={{ background: 'transparent', border: '1px solid #333', color: '#ccc', borderRadius: '6px', padding: '0.6rem 1.2rem', cursor: 'pointer', fontSize: '0.85rem', fontWeight: 600 }}>Cancel</button>
               <button type="button" onClick={() => { handleChange(previewModal.key, previewModal.data); setPreviewModal(null); }} style={{ background: 'linear-gradient(135deg,#ED1C24,#c01019)', color: '#fff', border: 'none', borderRadius: '6px', padding: '0.6rem 1.2rem', cursor: 'pointer', fontSize: '0.85rem', fontWeight: 600 }}>
                 Apply Changes
